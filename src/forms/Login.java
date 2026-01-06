@@ -109,7 +109,7 @@ public class Login extends javax.swing.JFrame {
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         String password = new String(txtPassword.getPassword());
-        if ("123456".equalsIgnoreCase(password)) {
+        if ("123".equalsIgnoreCase(password)) {
             this.dispose();
             BDUtility.openForm(Dashboard.class.getSimpleName(), new Dashboard());
           } else {
