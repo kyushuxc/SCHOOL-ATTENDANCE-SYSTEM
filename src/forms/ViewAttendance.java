@@ -418,7 +418,12 @@ public static void setupGenerateExcel(JButton generateBtn, JTable attendanceTabl
 
     Long daysBetween = (fromDate != null && toDate != null) ? countWeekdays(fromDate, toDate) : null;
 
-    StringBuilder sql = new StringBuilder("SELECT ud.id, ud.studentId, ud.name, ud.gender, ud.date, ud.timeIn, ud.section FROM studentAttendance ud");
+   StringBuilder sql = new StringBuilder(
+    "SELECT sa.id, sa.studentId, s.name, s.gender, sa.date, sa.timeIn, sa.section " +
+    "FROM studentAttendance sa " +
+    "JOIN student s ON sa.studentId = s.id"
+);
+
 
     List<String> conditions = new ArrayList<>();
     if (!searchText.isEmpty()) {
