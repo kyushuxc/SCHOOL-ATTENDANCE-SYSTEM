@@ -73,7 +73,7 @@ public class MarkAttendance extends javax.swing.JFrame implements Runnable, Thre
     
     public MarkAttendance() {
         initComponents();
-        BDUtility.setImage(this, "images/home.jpg", 1218, 698);
+        BDUtility.setImage(this, "images/homebgg.jpg", 1218, 698);
         this.getRootPane().setBorder(BorderFactory.createMatteBorder(6, 6, 6, 6, Color.GRAY));
         initWebcam();
         

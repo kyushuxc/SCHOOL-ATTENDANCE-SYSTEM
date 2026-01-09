@@ -20,10 +20,16 @@ import java.io.IOException;
 import java.lang.reflect.Array;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -49,7 +55,7 @@ public class ViewAttendance extends javax.swing.JFrame {
      */
     public ViewAttendance() {
         initComponents();
-         BDUtility.setImage(this, "images/home.jpg", 1020, 528);
+         BDUtility.setImage(this, "images/homebgg.jpg", 1020, 528);
          this.getRootPane().setBorder(BorderFactory.createMatteBorder(6, 6, 6, 6, Color.GRAY));
          
          dateChooserFrom.setDateFormatString("yyyy-MM-dd");
@@ -91,7 +97,7 @@ public class ViewAttendance extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI Black", 0, 48)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Sitka Subheading", 0, 48)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("VIEW ATTENDANCE");
 
@@ -183,7 +189,7 @@ public class ViewAttendance extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jLabel1)
-                        .addGap(235, 235, 235)
+                        .addGap(252, 252, 252)
                         .addComponent(exitbtn))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(20, 20, 20)
@@ -224,9 +230,12 @@ public class ViewAttendance extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(exitbtn))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(exitbtn)
+                        .addGap(43, 43, 43))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -235,7 +244,7 @@ public class ViewAttendance extends javax.swing.JFrame {
                                 .addComponent(jLabel4))
                             .addComponent(jLabel2)
                             .addComponent(jLabel3))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(dateChooserFrom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(dateChooserTo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -256,7 +265,7 @@ public class ViewAttendance extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(generateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(removeBtn))
-                .addGap(16, 16, 16))
+                .addGap(17, 17, 17))
         );
 
         pack();
@@ -336,6 +345,55 @@ public static void setupGenerateExcel(JButton generateBtn, JTable attendanceTabl
                     row.createCell(j).setCellValue(value != null ? value.toString() : "");
                 }
             }
+        // Step 1: Get all student names
+Set<String> allStudents = new HashSet<>();
+try (Connection con = ConnectionProvider.getCon();
+     Statement st = con.createStatement();
+     ResultSet rs = st.executeQuery("SELECT name FROM student")) {
+    while (rs.next()) {
+        allStudents.add(rs.getString("name"));
+    }
+} catch (Exception ex) {
+    JOptionPane.showMessageDialog(null, "Error loading student list: " + ex.getMessage());
+}
+
+// Step 2: Group present students by date
+Map<String, Set<String>> presentByDate = new HashMap<>();
+for (int i = 0; i < attendanceTable.getRowCount(); i++) {
+    String date = attendanceTable.getValueAt(i, 4).toString(); // formatted date
+    String name = attendanceTable.getValueAt(i, 2).toString(); // student name
+    presentByDate.computeIfAbsent(date, k -> new HashSet<>()).add(name);
+}
+
+// Step 3: Write summary with absent names
+int summaryStartRow = attendanceTable.getRowCount() + 2;
+Row header = sheet.createRow(summaryStartRow++);
+header.createCell(0).setCellValue("Date");
+header.createCell(1).setCellValue("Present");
+header.createCell(2).setCellValue("Absent Count");
+header.createCell(3).setCellValue("Absent Names");
+
+// Enable wrap text style
+CellStyle wrapStyle = workbook.createCellStyle();
+wrapStyle.setWrapText(true);
+
+for (Map.Entry<String, Set<String>> entry : presentByDate.entrySet()) {
+    String date = entry.getKey();
+    Set<String> presentStudents = entry.getValue();
+
+    Set<String> absentStudents = new HashSet<>(allStudents);
+    absentStudents.removeAll(presentStudents);
+
+    Row row = sheet.createRow(summaryStartRow++);
+    row.createCell(0).setCellValue(date);
+    row.createCell(1).setCellValue(presentStudents.size());
+    row.createCell(2).setCellValue(absentStudents.size());
+
+    String absentNames = String.join("\n", absentStudents);
+    Cell absentCell = row.createCell(3);
+    absentCell.setCellValue(absentNames);
+    absentCell.setCellStyle(wrapStyle);
+}
 
             // Save to file
             JFileChooser fileChooser = new JFileChooser();
@@ -399,7 +457,7 @@ public static void setupGenerateExcel(JButton generateBtn, JTable attendanceTabl
     private javax.swing.JTextField txtSearch;
     // End of variables declaration//GEN-END:variables
 
-    private void loadDataInTable(){
+   private void loadDataInTable() {
     List<String> columns = Arrays.asList("id", "studentId", "name", "gender", "date", "timeIn", "section");
 
     String searchText = txtSearch.getText().replaceAll("\\p{C}", "").trim().toLowerCase();
@@ -418,29 +476,27 @@ public static void setupGenerateExcel(JButton generateBtn, JTable attendanceTabl
 
     Long daysBetween = (fromDate != null && toDate != null) ? countWeekdays(fromDate, toDate) : null;
 
-   StringBuilder sql = new StringBuilder(
-    "SELECT sa.id, sa.studentId, s.name, s.gender, sa.date, sa.timeIn, sa.section " +
-    "FROM studentAttendance sa " +
-    "JOIN student s ON sa.studentId = s.id"
-);
-
+    StringBuilder sql = new StringBuilder(
+        "SELECT sa.id, sa.studentId, s.name, s.gender, sa.date, sa.timeIn, sa.section " +
+        "FROM studentAttendance sa " +
+        "JOIN student s ON sa.studentId = s.id"
+    );
 
     List<String> conditions = new ArrayList<>();
     if (!searchText.isEmpty()) {
-        conditions.add("(LOWER(ud.name) LIKE '%" + searchText + "%' OR ud.studentId LIKE '%" + searchText + "%')");
+        conditions.add("(LOWER(s.name) LIKE '%" + searchText + "%' OR sa.studentId LIKE '%" + searchText + "%')");
     }
     if (fromDate != null && toDate != null) {
-        conditions.add("DATE(ud.date) BETWEEN '" + fromDate + "' AND '" + toDate + "'");
+        conditions.add("DATE(sa.date) BETWEEN '" + fromDate + "' AND '" + toDate + "'");
     } else if (fromDate != null) {
-        conditions.add("DATE(ud.date) = '" + fromDate + "'");
+        conditions.add("DATE(sa.date) = '" + fromDate + "'");
     }
 
     if (!conditions.isEmpty()) {
         sql.append(" WHERE ").append(String.join(" AND ", conditions));
     }
 
-   
-   System.out.println("SQL Query: " + sql.toString());
+    System.out.println("SQL Query: " + sql.toString());
 
     DefaultTableModel model = new DefaultTableModel();
     model.setColumnIdentifiers(columns.toArray());
@@ -461,9 +517,25 @@ public static void setupGenerateExcel(JButton generateBtn, JTable attendanceTabl
             row.add(rs.getString("studentId"));
             row.add(rs.getString("name"));
             row.add(rs.getString("gender"));
-            row.add(rs.getString("date"));
-            row.add(rs.getString("timeIn"));
-            row.add(rs.getString("section"));
+
+            // Convert UTC date and time to Asia/Manila timezone
+            LocalDate rawDate = LocalDate.parse(rs.getString("date"));
+            LocalTime rawTime = LocalTime.parse(rs.getString("timeIn"));
+
+            ZoneId dbZone = ZoneId.of("UTC");
+            ZoneId localZone = ZoneId.of("Asia/Manila");
+
+            LocalDateTime utcDateTime = LocalDateTime.of(rawDate, rawTime);
+            ZonedDateTime localDateTime = utcDateTime.atZone(dbZone).withZoneSameInstant(localZone);
+
+            // Format for display
+            String formattedDate = localDateTime.format(DateTimeFormatter.ofPattern("MMM dd, yyyy"));
+            String formattedTime = localDateTime.format(DateTimeFormatter.ofPattern("hh:mma")).toLowerCase();
+
+            row.add(formattedDate);
+            row.add(formattedTime);
+            row.add(rs.getString("section")); // Correct section value
+
             model.addRow(row.toArray());
             presentCount++;
         }
@@ -488,11 +560,9 @@ public static void setupGenerateExcel(JButton generateBtn, JTable attendanceTabl
 
     } catch (Exception ex) {
         JOptionPane.showMessageDialog(null, "Something went wrong.");
-        ex.printStackTrace(); // Optional: helpful for debugging
+        ex.printStackTrace();
     }
 }
-
- 
     private Long countWeekdays(LocalDate fromDate, LocalDate toDate) {
     long count = 0;
     LocalDate date = fromDate;

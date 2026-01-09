@@ -20,7 +20,7 @@ public class Login extends javax.swing.JFrame {
      */
     public Login() {
         initComponents();
-        BDUtility.setImage(this, "images/home.jpg", 753, 431);
+        BDUtility.setImage(this, "images/homebgg.jpg", 753, 431);
         this.getRootPane().setBorder(BorderFactory.createMatteBorder(6, 6, 6, 6, Color.GRAY));
     }
 
@@ -111,7 +111,10 @@ public class Login extends javax.swing.JFrame {
         String password = new String(txtPassword.getPassword());
         if ("123".equalsIgnoreCase(password)) {
             this.dispose();
-            BDUtility.openForm(Dashboard.class.getSimpleName(), new Dashboard());
+            BDUtility.openForm(Dashboard.class.getSimpleName(), new Dashboard());           
+          }else if ("321".equalsIgnoreCase(password)) {
+            this.dispose();
+            BDUtility.openForm(ViewAttendance.class.getSimpleName(), new ViewAttendance());
           } else {
             JOptionPane.showMessageDialog(null, "Invalid Password", "invalid", JOptionPane.ERROR_MESSAGE);
         }

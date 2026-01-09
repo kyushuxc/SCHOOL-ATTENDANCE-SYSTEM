@@ -20,7 +20,7 @@ public class Dashboard extends javax.swing.JFrame {
      */ 
     public Dashboard() {
         initComponents();
-        BDUtility.setImage(this, "images/dash.jpg", 1366, 768);
+        BDUtility.setImage(this, "images/kk.jpg", 1366, 768);
         this.getRootPane().setBorder(BorderFactory.createMatteBorder(6, 6, 6, 6, Color.GRAY));
     }
 

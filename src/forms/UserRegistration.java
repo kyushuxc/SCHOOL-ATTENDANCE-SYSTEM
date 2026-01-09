@@ -30,7 +30,7 @@ public class UserRegistration extends javax.swing.JFrame {
      */
     public UserRegistration() {
         initComponents();
-        BDUtility.setImage(this, "images/home.jpg", 850, 600);
+        BDUtility.setImage(this, "images/homebgg.jpg", 850, 600);
         this.getRootPane().setBorder(BorderFactory.createMatteBorder(6, 6, 6, 6, Color.GRAY));
     }
 
