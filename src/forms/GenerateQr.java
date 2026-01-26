@@ -27,6 +27,8 @@ import javax.swing.table.TableModel;
 import net.glxn.qrgen.core.image.ImageType;
 import net.glxn.qrgen.javase.QRCode;
 
+
+
 /**
  *
  * @author Pejj
@@ -40,7 +42,7 @@ public class GenerateQr extends javax.swing.JFrame {
      */
     public GenerateQr() {
         initComponents();
-        BDUtility.setImage(this, "images/kkk.png", 1101, 501);
+        BDUtility.setImage(this, "images/newbgs (2).jpg", 1101, 501);
         this.getRootPane().setBorder(BorderFactory.createMatteBorder(6, 6, 6, 6, Color.GRAY));
     }
 
@@ -61,12 +63,21 @@ public class GenerateQr extends javax.swing.JFrame {
         saveBtn = new javax.swing.JButton();
         saveqratBtn = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        txtSearch = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        Grdbtn11 = new javax.swing.JButton();
+        Grdbtn12 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentShown(java.awt.event.ComponentEvent evt) {
                 formComponentShown(evt);
+            }
+        });
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
             }
         });
 
@@ -103,12 +114,13 @@ public class GenerateQr extends javax.swing.JFrame {
             }
         });
 
+        studentTable.setFont(new java.awt.Font("Segoe UI", 3, 10)); // NOI18N
         studentTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "LRN", "NAME", "GENDER", "SECTION", "ADVISER"
+                "LRN", "NAME", "GENDER", "GRADE & SEC", "ADVISER"
             }
         ));
         studentTable.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -120,6 +132,7 @@ public class GenerateQr extends javax.swing.JFrame {
 
         saveBtn.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         saveBtn.setText("SAVE");
+        saveBtn.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, null, java.awt.Color.darkGray, null, null));
         saveBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 saveBtnActionPerformed(evt);
@@ -128,6 +141,7 @@ public class GenerateQr extends javax.swing.JFrame {
 
         saveqratBtn.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         saveqratBtn.setText("SAVE QR AT");
+        saveqratBtn.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, null, java.awt.Color.darkGray, null, null));
         saveqratBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 saveqratBtnActionPerformed(evt);
@@ -138,30 +152,68 @@ public class GenerateQr extends javax.swing.JFrame {
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("GENERATE QR CODE");
 
+        txtSearch.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        txtSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtSearchKeyReleased(evt);
+            }
+        });
+
+        jLabel4.setFont(new java.awt.Font("Segoe UI Black", 1, 14)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel4.setText("SEARCH: ");
+
+        Grdbtn11.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
+        Grdbtn11.setText("GRADE 11");
+        Grdbtn11.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, null, java.awt.Color.darkGray, null, null));
+        Grdbtn11.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Grdbtn11ActionPerformed(evt);
+            }
+        });
+
+        Grdbtn12.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
+        Grdbtn12.setText("GRADE 12");
+        Grdbtn12.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, null, java.awt.Color.darkGray, null, null));
+        Grdbtn12.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Grdbtn12ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGap(27, 27, 27)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel1)
-                        .addGap(236, 236, 236)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 678, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4)
+                            .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(Grdbtn11, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(Grdbtn12, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(23, 23, 23)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(339, 339, 339)
                         .addComponent(exitbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(27, 27, 27)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 678, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jInternalFrame1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(50, 50, 50)
-                                .addComponent(saveBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(29, 29, 29)
-                                .addComponent(saveqratBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(38, 38, 38)))
+                        .addGap(50, 50, 50)
+                        .addComponent(saveBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(29, 29, 29)
+                        .addComponent(saveqratBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jInternalFrame1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -174,16 +226,29 @@ public class GenerateQr extends javax.swing.JFrame {
                         .addGap(56, 56, 56))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jLabel1)
-                        .addGap(18, 18, 18)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jInternalFrame1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(saveqratBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
+                            .addComponent(saveBtn))
+                        .addContainerGap(25, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(saveqratBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(saveBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(26, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(13, 13, 13)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(Grdbtn12, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(Grdbtn11, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(14, 14, 14))))
         );
 
         pack();
@@ -194,7 +259,7 @@ public class GenerateQr extends javax.swing.JFrame {
        
        
     }//GEN-LAST:event_lblimageMouseClicked
-
+ 
     private void exitbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitbtnActionPerformed
        this.dispose();
     }//GEN-LAST:event_exitbtnActionPerformed
@@ -259,28 +324,29 @@ data.put("adviser", adviser);
     }//GEN-LAST:event_studentTableMouseClicked
 
     private void saveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveBtnActionPerformed
-      
-        try {
-            if (out == null) {
-                JOptionPane.showConfirmDialog(this, "No Qr Generated.!");
-                return;
-            }
-            
-            String defaultDir = BDUtility.getPath("qrCode");
-            File directory = new File(defaultDir);
-            if (!directory.exists()){
-                directory.mkdirs();
-            }
-            File defaultFile = new File(directory, name + ".jpg");
-            try {
-                java.nio.file.Files.write(defaultFile.toPath(), out.toByteArray());
-                JOptionPane.showMessageDialog(null, "QR Code saved successfully!");
-            }catch(Exception ex){
-                JOptionPane.showMessageDialog(this, "Error saving QR Code.", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        } catch (Exception ex) {
-            JOptionPane.showConfirmDialog(null, "Something went wrong.");
+                                          
+    try {
+        if (out == null) {
+            JOptionPane.showMessageDialog(this, "No QR Generated!");
+            return;
         }
+
+        File directory = new File("qrCode"); // ✅ external folder
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
+
+        File defaultFile = new File(directory, name.replaceAll("\\s+", "_") + ".png");
+        try {
+            java.nio.file.Files.write(defaultFile.toPath(), out.toByteArray());
+            JOptionPane.showMessageDialog(null, "QR Code saved successfully!");
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error saving QR Code.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    } catch (Exception ex) {
+        JOptionPane.showMessageDialog(null, "Something went wrong.", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
     }//GEN-LAST:event_saveBtnActionPerformed
 
     private void saveqratBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveqratBtnActionPerformed
@@ -312,6 +378,110 @@ data.put("adviser", adviser);
       }
     }//GEN-LAST:event_saveqratBtnActionPerformed
 
+    private void txtSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchKeyReleased
+        try{
+            fetchUser(txtSearch.getText().toString());
+        } catch (Exception ex){
+            ex.printStackTrace();
+        }
+    }//GEN-LAST:event_txtSearchKeyReleased
+ 
+   private void fetchUser(String searchText) throws Exception {
+    filterTable(searchText);
+}
+private void filterTable(String searchText) {
+    DefaultTableModel model = (DefaultTableModel) studentTable.getModel();
+    model.setRowCount(0);
+    try {
+        Connection con = ConnectionProvider.getCon();
+        PreparedStatement ps;
+        
+        if (searchText == null || searchText.trim().isEmpty()) {
+            ps = con.prepareStatement("SELECT * FROM student");
+        } else {
+            ps = con.prepareStatement("SELECT * FROM student WHERE name LIKE ?");
+            ps.setString(1, "%" + searchText + "%");
+        }
+        
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            model.addRow(new Object[] {
+                rs.getString("id"),
+                rs.getString("name"),
+                rs.getString("gender"),
+                rs.getString("section"),
+                rs.getString("adviser"),
+            });
+        }
+        rs.close();
+        ps.close();
+    } catch (Exception ex) {
+        ex.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Error loading students.", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+} 
+    private void fetchUserByGrade(String grade) throws Exception {
+    DefaultTableModel model = (DefaultTableModel) studentTable.getModel();
+    model.setRowCount(0);
+    try {
+        Connection con = ConnectionProvider.getCon();
+        PreparedStatement ps = con.prepareStatement("SELECT * FROM student WHERE section LIKE ?");
+        ps.setString(1, grade + "%"); // Matches "11-Finance", "12-Java", etc.
+        
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            model.addRow(new Object[] {
+                rs.getString("id"),
+                rs.getString("name"),
+                rs.getString("gender"),
+                rs.getString("section"),
+                rs.getString("adviser"),
+            });
+        }
+        
+        // Clear the image preview when filtering
+        lblimage.setIcon(null);
+        
+        // Clear search text to indicate filter is active
+        txtSearch.setText("");
+        
+    } catch (Exception ex) {
+        ex.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Error loading Grade " + grade + " students.", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+}
+    
+    private void Grdbtn11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Grdbtn11ActionPerformed
+        try {
+            fetchUserByGrade("11");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error filtering Grade 11 students.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_Grdbtn11ActionPerformed
+
+    private void Grdbtn12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Grdbtn12ActionPerformed
+        try {
+            fetchUserByGrade("12");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error filtering Grade 12 students.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_Grdbtn12ActionPerformed
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+    for(double i=0.0; i<=1.0;i +=0.1) {
+            String s = i+"";
+            float f = Float.valueOf(s);
+            this.setOpacity(f);
+            try {
+                Thread.sleep(20);
+            } catch (InterruptedException ex) {
+                System.getLogger(GenerateQr.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            }
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_formWindowOpened
+
     /**
      * @param args the command line arguments
      */
@@ -338,13 +508,17 @@ data.put("adviser", adviser);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton Grdbtn11;
+    private javax.swing.JButton Grdbtn12;
     private javax.swing.JButton exitbtn;
     private javax.swing.JInternalFrame jInternalFrame1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblimage;
     private javax.swing.JButton saveBtn;
     private javax.swing.JButton saveqratBtn;
     private javax.swing.JTable studentTable;
+    private javax.swing.JTextField txtSearch;
     // End of variables declaration//GEN-END:variables
 }

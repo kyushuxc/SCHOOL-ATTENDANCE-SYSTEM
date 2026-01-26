@@ -6,6 +6,8 @@ package forms;
 
 import dao.ConnectionProvider;
 import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Dialog;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -38,10 +40,11 @@ public class Updatestudent extends javax.swing.JFrame {
   
     public Updatestudent() {
         initComponents();
-        BDUtility.setImage(this, "images/kkk.png", 882, 510);
+        BDUtility.setImage(this, "images/newbgs (2).jpg", 882, 510);
         this.getRootPane().setBorder(BorderFactory.createMatteBorder(6, 6, 6, 6, Color.GRAY));
+        
     }
-
+ 
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -51,33 +54,33 @@ public class Updatestudent extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel6 = new javax.swing.JLabel();
-        txtLrn = new javax.swing.JTextField();
         jInternalFrame1 = new javax.swing.JInternalFrame();
         lblimage = new javax.swing.JLabel();
         exitbtn = new javax.swing.JButton();
         btnClear = new javax.swing.JButton();
         btnUpdate = new javax.swing.JButton();
-        txtSection = new javax.swing.JTextField();
-        radioFemale = new javax.swing.JRadioButton();
-        radioMale = new javax.swing.JRadioButton();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        txtName = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        txtAdviser = new javax.swing.JTextField();
-        searchBtn = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        txtLrn = new javax.swing.JTextField();
+        searchBtn = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        txtName = new javax.swing.JTextField();
+        jLabel9 = new javax.swing.JLabel();
+        radioMale = new javax.swing.JRadioButton();
+        radioFemale = new javax.swing.JRadioButton();
+        jLabel10 = new javax.swing.JLabel();
+        txtSection = new javax.swing.JTextField();
+        jLabel11 = new javax.swing.JLabel();
+        txtAdviser = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
-
-        jLabel6.setFont(new java.awt.Font("Segoe UI Black", 1, 14)); // NOI18N
-        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel6.setText("STUDENT LRN:");
-
-        txtLrn.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         jInternalFrame1.setVisible(true);
 
@@ -112,170 +115,214 @@ public class Updatestudent extends javax.swing.JFrame {
             }
         });
 
-        btnClear.setFont(new java.awt.Font("Segoe UI Black", 1, 12)); // NOI18N
-        btnClear.setText("CLEAR");
+        btnClear.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
+        btnClear.setText("Clear");
+        btnClear.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, null, java.awt.Color.darkGray, null, null));
         btnClear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnClearActionPerformed(evt);
             }
         });
 
-        btnUpdate.setFont(new java.awt.Font("Segoe UI Black", 1, 12)); // NOI18N
-        btnUpdate.setText("UPDATE");
+        btnUpdate.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
+        btnUpdate.setText("Update");
+        btnUpdate.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, null, java.awt.Color.darkGray, null, null));
         btnUpdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnUpdateActionPerformed(evt);
             }
         });
 
-        txtSection.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("SansSerif", 3, 48)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("UPDATE INFORMATION");
 
-        radioFemale.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        radioFemale.setForeground(new java.awt.Color(255, 255, 255));
-        radioFemale.setText("FEMALE");
-        radioFemale.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                radioFemaleActionPerformed(evt);
+        jPanel1 = new javax.swing.JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2d = (Graphics2D) g.create();
+                // Semi-transparent background (black with alpha = 60/255)
+                g2d.setColor(new Color(0, 0, 0, 60));
+                g2d.fillRect(0, 0, getWidth(), getHeight());
+                g2d.dispose();
             }
-        });
+        };
+        jPanel1.setOpaque(false); // allow transparency
+        jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        radioMale.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        radioMale.setForeground(new java.awt.Color(255, 255, 255));
-        radioMale.setText("MALE");
-        radioMale.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                radioMaleActionPerformed(evt);
-            }
-        });
+        txtLrn.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        txtLrn.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, null, java.awt.Color.darkGray, null, null));
 
-        jLabel3.setFont(new java.awt.Font("Segoe UI Black", 1, 14)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel3.setText("GENDER");
-
-        jLabel2.setFont(new java.awt.Font("Segoe UI Black", 1, 14)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setText("FULLNAME:");
-
-        txtName.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-
-        jLabel4.setFont(new java.awt.Font("Segoe UI Black", 1, 14)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel4.setText("SECTION:");
-
-        jLabel5.setFont(new java.awt.Font("Segoe UI Black", 1, 14)); // NOI18N
-        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel5.setText("ADVISER:");
-
-        txtAdviser.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-
-        searchBtn.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        searchBtn.setText("SEARCH");
+        searchBtn.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
+        searchBtn.setText("Search");
+        searchBtn.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, null, java.awt.Color.darkGray, null, null));
         searchBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 searchBtnActionPerformed(evt);
             }
         });
 
-        jLabel1.setFont(new java.awt.Font("Sitka Small", 0, 48)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("UPDATE INFORMATION");
+        jLabel6.setFont(new java.awt.Font("SansSerif", 1, 20)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel6.setText("Student Lrn:");
+
+        jLabel8.setFont(new java.awt.Font("SansSerif", 1, 20)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel8.setText("Full name:");
+
+        txtName.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        txtName.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, null, java.awt.Color.darkGray, null, null));
+
+        jLabel9.setFont(new java.awt.Font("SansSerif", 1, 20)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel9.setText("Gender:");
+
+        radioMale.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        radioMale.setForeground(new java.awt.Color(255, 255, 255));
+        radioMale.setText("MALE");
+        radioMale.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, null, java.awt.Color.darkGray, null, null));
+        radioMale.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                radioMaleActionPerformed(evt);
+            }
+        });
+
+        radioFemale.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        radioFemale.setForeground(new java.awt.Color(255, 255, 255));
+        radioFemale.setText("FEMALE");
+        radioFemale.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, null, java.awt.Color.darkGray, null, null));
+        radioFemale.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                radioFemaleActionPerformed(evt);
+            }
+        });
+
+        jLabel10.setFont(new java.awt.Font("SansSerif", 1, 20)); // NOI18N
+        jLabel10.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel10.setText("Section:");
+
+        txtSection.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        txtSection.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, null, java.awt.Color.darkGray, null, null));
+
+        jLabel11.setFont(new java.awt.Font("SansSerif", 1, 20)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel11.setText("Adviser:");
+
+        txtAdviser.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        txtAdviser.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, null, java.awt.Color.darkGray, null, null));
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(20, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(searchBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addComponent(jLabel6)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(txtLrn, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel11)
+                                    .addComponent(jLabel10)
+                                    .addComponent(jLabel9))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(txtSection)
+                                    .addComponent(txtAdviser, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(1, 1, 1)
+                                .addComponent(jLabel8)
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(131, 131, 131)
+                        .addComponent(radioMale)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(radioFemale)))
+                .addGap(16, 16, 16))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(14, 14, 14)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtLrn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(searchBtn)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(radioMale)
+                    .addComponent(radioFemale)
+                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtSection, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel10))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtAdviser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel11))
+                .addContainerGap(17, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(33, 33, 33)
+                .addGap(19, 19, 19)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jLabel6)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(txtLrn, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jLabel2)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGroup(layout.createSequentialGroup()
-                                            .addGap(12, 12, 12)
-                                            .addComponent(radioMale)
-                                            .addGap(18, 18, 18)
-                                            .addComponent(radioFemale))))
-                                .addComponent(searchBtn))
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jLabel4)
-                                    .addGap(49, 49, 49)
-                                    .addComponent(txtSection, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addComponent(txtAdviser, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jLabel5)
-                                    .addGap(280, 280, 280)))
-                            .addComponent(jLabel3))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 86, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jInternalFrame1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(46, 46, 46)
-                                .addComponent(btnClear, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(37, 37, 37)))
-                        .addGap(64, 64, 64))
+                            .addGroup(layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnClear, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(106, 106, 106))
+                            .addGroup(layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jInternalFrame1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(35, Short.MAX_VALUE))))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(120, 120, 120)
                         .addComponent(jLabel1)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(exitbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(exitbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(exitbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
-                .addGap(5, 5, 5)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(75, 75, 75)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtLrn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(searchBtn)
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(23, 23, 23)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(radioMale)
-                            .addComponent(radioFemale))
-                        .addGap(23, 23, 23)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtSection, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(30, 30, 30)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtAdviser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(exitbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
-                        .addComponent(jInternalFrame1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel1)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnClear, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(42, 42, 42))))
+                        .addComponent(jInternalFrame1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(61, 61, 61)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnClear, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(44, 44, 44))
         );
 
         pack();
@@ -329,7 +376,8 @@ public class Updatestudent extends javax.swing.JFrame {
     private void exitbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitbtnActionPerformed
         this.dispose();
     }//GEN-LAST:event_exitbtnActionPerformed
-
+private javax.swing.JTextField txtNewLrn;
+private javax.swing.JLabel jLabelNewLrn;
     private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
           clearForm();
 }                                        
@@ -345,89 +393,109 @@ private void clearForm() {
     }//GEN-LAST:event_btnClearActionPerformed
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
-           try {
-    String name = txtName.getText().toString();
-    String gender = "";
-    if (radioMale.isSelected()) {
-        gender = "Male";
-    }
-    else if (radioFemale.isSelected()) {
-        gender = "Female";
-    }
-    String lrn = txtLrn.getText().trim();
-    if (lrn.isEmpty() || !lrn.matches("\\d+")) {
-        JOptionPane.showMessageDialog(null, "Invalid LRN. Must be a number.", "Invalid", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-    
-    String section = txtSection.getText();
-    String adviser= txtAdviser.getText();
-    
-    if(lrn.isEmpty() || name.isEmpty() || gender.isEmpty() || section.isEmpty() || adviser.isEmpty()){
-        JOptionPane.showMessageDialog(null, "One or more fields are empthy.", "Field Empty", JOptionPane.WARNING_MESSAGE);
-        return;
-    }
-     Connection connection = ConnectionProvider.getCon();
-    
-try {
-    Statement st = connection.createStatement();
-    ResultSet rs = st.executeQuery("select * from student where id = '" + lrn + "'");
-    if (!rs.next()) {
-        JOptionPane.showMessageDialog(null, "Lrn not found.", "Not Found", JOptionPane.WARNING_MESSAGE);
-        return;
-    }
-} catch (Exception ex) {
-    JOptionPane.showMessageDialog(null, ex);
-}  
-     
-    String imageName = saveImage(lrn);
-    String updateQuery;
-PreparedStatement preparedStatement;
+   try {
+        String oldLrn = txtLrn.getText().trim(); // current LRN
+        String newLrn = txtNewLrn.getText().trim(); // new LRN
+        String name = txtName.getText().trim();
+        String gender = radioMale.isSelected() ? "Male" : radioFemale.isSelected() ? "Female" : "";
+        String section = txtSection.getText().trim();
+        String adviser = txtAdviser.getText().trim();
 
-if (imageName != null) {
-    updateQuery = "UPDATE student SET id=?, name=?, gender=?, section=?, adviser=?, imagename=? WHERE id=?";
-    preparedStatement = connection.prepareStatement(updateQuery);
-    preparedStatement.setString(1, lrn);
-    preparedStatement.setString(2, name);
-    preparedStatement.setString(3, gender);
-    preparedStatement.setString(4, section);
-    preparedStatement.setString(5, adviser);
-    preparedStatement.setString(6, imageName);
-    preparedStatement.setString(7, lrn); // WHERE clause
-} else {
-    updateQuery = "UPDATE student SET id=?, name=?, gender=?, section=?, adviser=? WHERE id=?";
-    preparedStatement = connection.prepareStatement(updateQuery);
-    preparedStatement.setString(1, lrn);
-    preparedStatement.setString(2, name);
-    preparedStatement.setString(3, gender);
-    preparedStatement.setString(4, section);
-    preparedStatement.setString(5, adviser);
-    preparedStatement.setString(6, lrn); // WHERE clause
-}
-   preparedStatement.executeUpdate();
-   JOptionPane.showMessageDialog(null, "Student Updated Successfully.", "Comfirmation", JOptionPane.INFORMATION_MESSAGE);
-   clearForm();
-
-   }catch (Exception ex) {
-    ex.printStackTrace();
+        if (oldLrn.isEmpty() || !oldLrn.matches("\\d+")) {
+            JOptionPane.showMessageDialog(null, "Invalid current LRN.", "Invalid", JOptionPane.ERROR_MESSAGE);
+            return;
         }
+        if (newLrn.isEmpty() || !newLrn.matches("\\d+")) {
+            JOptionPane.showMessageDialog(null, "New LRN must be a valid number.", "Invalid", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (name.isEmpty() || gender.isEmpty() || section.isEmpty() || adviser.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "One or more fields are empty.", "Field Empty", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        Connection connection = ConnectionProvider.getCon();
+        Statement st = connection.createStatement();
+        ResultSet rs = st.executeQuery("SELECT * FROM student WHERE id = '" + oldLrn + "'");
+        if (!rs.next()) {
+            JOptionPane.showMessageDialog(null, "LRN not found.", "Not Found", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String imageName = saveImage(name);
+        String updateQuery;
+        PreparedStatement preparedStatement;
+
+        if (imageName != null) {
+            updateQuery = "UPDATE student SET id=?, name=?, gender=?, section=?, adviser=?, imagename=? WHERE id=?";
+            preparedStatement = connection.prepareStatement(updateQuery);
+            preparedStatement.setString(1, newLrn);
+            preparedStatement.setString(2, name);
+            preparedStatement.setString(3, gender);
+            preparedStatement.setString(4, section);
+            preparedStatement.setString(5, adviser);
+            preparedStatement.setString(6, imageName);
+            preparedStatement.setString(7, oldLrn);
+        } else {
+            updateQuery = "UPDATE student SET id=?, name=?, gender=?, section=?, adviser=? WHERE id=?";
+            preparedStatement = connection.prepareStatement(updateQuery);
+            preparedStatement.setString(1, newLrn);
+            preparedStatement.setString(2, name);
+            preparedStatement.setString(3, gender);
+            preparedStatement.setString(4, section);
+            preparedStatement.setString(5, adviser);
+            preparedStatement.setString(6, oldLrn);
+        }
+
+        preparedStatement.executeUpdate();
+
+        // Optional: update attendance tables too
+        PreparedStatement ps1 = connection.prepareStatement("UPDATE studentAttendance SET studentId=? WHERE studentId=?");
+        ps1.setString(1, newLrn);
+        ps1.setString(2, oldLrn);
+        ps1.executeUpdate();
+
+        PreparedStatement ps2 = connection.prepareStatement("UPDATE studentAttendanceArchive SET studentId=? WHERE studentId=?");
+        ps2.setString(1, newLrn);
+        ps2.setString(2, oldLrn);
+        ps2.executeUpdate();
+
+        PreparedStatement ps3 = connection.prepareStatement("UPDATE studentAttendancee SET studentId=? WHERE studentId=?");
+        ps3.setString(1, newLrn);
+        ps3.setString(2, oldLrn);
+        ps3.executeUpdate();
+
+        JOptionPane.showMessageDialog(null, "Student LRN and details updated successfully.", "Confirmation", JOptionPane.INFORMATION_MESSAGE);
+        clearForm();
+
+    } catch (Exception ex) {
+        ex.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Update failed: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
     }//GEN-LAST:event_btnUpdateActionPerformed
-     private String saveImage(String name) {
+ private String saveImage(String studentName) {
     if (originalImage != null && selectedFile != null) {
         try {
-            String savePath = BDUtility.getPath("images\\");
             String extension = BDUtility.getFileExtension(selectedFile.getName());
-            String imageName = name + "." + extension;
-            File saveFile = new File(savePath + imageName);
+            String imageName = studentName.replaceAll("\\s+", "_") + "." + extension;
+
+            File saveDir = new File("images"); // external folder next to JAR
+            if (!saveDir.exists()) saveDir.mkdirs();
+
+            File saveFile = new File(saveDir, imageName);
             BufferedImage scaledImage = BDUtility.scaleImage(originalImage, ImageIO.read(selectedFile));
             ImageIO.write(scaledImage, extension, saveFile);
+
             return imageName;
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
     return null;
-} 
+}
+
+
    
     private void searchBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchBtnActionPerformed
         String existingImagename = null;
@@ -456,23 +524,25 @@ if (imageName != null) {
             radioMale.setSelected("Male".equalsIgnoreCase(gender));
             radioFemale.setSelected("Female".equalsIgnoreCase(gender));
 
-            String imageNameDB = rs.getString("imagename");
-            existingImagename = (imageNameDB == null || imageNameDB.isEmpty()) ? null : imageNameDB;
+     
+      File externalFile = new File("images", existingImagename);
 
-            if (existingImagename != null) {
-                String imagePath = BDUtility.getPath("images" + File.separator + existingImagename);
-                File imageFile = new File(imagePath);
+    if (externalFile.exists()) {
+    ImageIcon icon = new ImageIcon(externalFile.getAbsolutePath());
+    java.awt.Image scaledImage = icon.getImage().getScaledInstance(323, 386, java.awt.Image.SCALE_SMOOTH);
+    lblimage.setIcon(new ImageIcon(scaledImage));
+    } else {
+    // fallback to bundled resource
+    java.net.URL imgURL = BDUtility.class.getResource("/images/" + existingImagename);
+    if (imgURL != null) {
+        ImageIcon icon = new ImageIcon(imgURL);
+        java.awt.Image scaledImage = icon.getImage().getScaledInstance(323, 386, java.awt.Image.SCALE_SMOOTH);
+        lblimage.setIcon(new ImageIcon(scaledImage));
+    } else {
+        lblimage.setIcon(null);
+        JOptionPane.showMessageDialog(null, "Image not found: " + existingImagename, "Image Not Found", JOptionPane.WARNING_MESSAGE);
+    }
 
-                if (imageFile.exists()) {
-                    ImageIcon icon = new ImageIcon(imagePath);
-                    java.awt.Image scaledImage = icon.getImage().getScaledInstance(323, 386, java.awt.Image.SCALE_SMOOTH);
-                    lblimage.setIcon(new ImageIcon(scaledImage));
-                } else {
-                    lblimage.setIcon(null);
-                    JOptionPane.showMessageDialog(null, "Image file not found: " + imagePath, "Image Not Found", JOptionPane.WARNING_MESSAGE);
-                }
-            } else {
-                lblimage.setIcon(null);
             }
         } else {
             JOptionPane.showMessageDialog(null, "No student found with LRN: " + lrn, "Not Found", JOptionPane.WARNING_MESSAGE);
@@ -505,6 +575,19 @@ if (imageName != null) {
    }
     }//GEN-LAST:event_radioFemaleActionPerformed
 
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+         for(double i=0.0; i<=1.0;i +=0.1) {
+            String s = i+"";
+            float f = Float.valueOf(s);
+            this.setOpacity(f);
+            try {
+                Thread.sleep(40);
+            } catch (InterruptedException ex) {
+                System.getLogger(Updatestudent.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            }
+        }
+    }//GEN-LAST:event_formWindowOpened
+
     /**
      * @param args the command line arguments
      */
@@ -535,11 +618,12 @@ if (imageName != null) {
     private javax.swing.JButton exitbtn;
     private javax.swing.JInternalFrame jInternalFrame1;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblimage;
     private javax.swing.JRadioButton radioFemale;
     private javax.swing.JRadioButton radioMale;

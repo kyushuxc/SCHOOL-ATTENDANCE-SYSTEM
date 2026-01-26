@@ -1,0 +1,547 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ */
+package forms;
+
+import dao.ConnectionProvider;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import javax.swing.BorderFactory;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import utility.BDUtility;
+
+/**
+ *
+ * @author Pejj
+ */
+public class AppleAttendance extends javax.swing.JFrame {
+    
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(AppleAttendance.class.getName());
+
+    /**
+     * Creates new form AppleAttendance
+     */
+    public AppleAttendance() {
+        initComponents();
+    BDUtility.setImage(this, "images/newbgs (1).jpg", 1020, 528);
+    this.getRootPane().setBorder(BorderFactory.createMatteBorder(6, 6, 6, 6, Color.GRAY));
+    
+    
+maleBtn.addActionListener(new java.awt.event.ActionListener() {
+    public void actionPerformed(java.awt.event.ActionEvent evt) {
+        filterByGender("Male");
+    }
+});
+
+fmaleBtn.addActionListener(new java.awt.event.ActionListener() {
+    public void actionPerformed(java.awt.event.ActionEvent evt) {
+        filterByGender("Female");
+    }
+});
+
+}
+ 
+ private void startMidnightClearThread() {
+    Thread midnightThread = new Thread(() -> {
+        while (true) {
+            LocalTime now = LocalTime.now();
+            if (now.getHour() == 0 && now.getMinute() < 5) { // within first 5 minutes of midnight
+                clearTablePreserveData();
+
+                try {
+                    Thread.sleep(300000); // sleep 5 minutes to avoid multiple triggers
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+            }
+
+            try {
+                Thread.sleep(60000); // check every minute
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
+        }
+    });
+    midnightThread.setDaemon(true); // allows app to close properly
+    midnightThread.start();
+}
+private void clearTablePreserveData() {
+    DefaultTableModel model = (DefaultTableModel) studentTable.getModel();
+    model.setRowCount(0); // Clears all rows
+    lblPresent.setText("0");
+    lblAbsent.setText("0");
+    JOptionPane.showMessageDialog(null, "Attendance table cleared for the new day.");
+}
+   
+   private void filterByGender(String genderKeyword) {
+    List<String> columns = Arrays.asList("LRN", "NAME", "GENDER", "DATE", "TIME-IN", "GRADE & SEC");
+    DefaultTableModel model = new DefaultTableModel();
+    model.setColumnIdentifiers(columns.toArray());
+    studentTable.setModel(model);
+
+    LocalDate today = LocalDate.now();
+
+    String sql = "SELECT combined.studentId, combined.name, " +
+                 "COALESCE(s.gender, combined.gender, 'N/A') as gender, " +
+                 "combined.date, combined.timeIn, combined.section " +
+                 "FROM (" +
+                 "SELECT studentId, name, gender, date, timeIn, section FROM studentAttendancee " +
+                 "UNION ALL " +
+                 "SELECT studentId, name, gender, date, timeIn, section FROM studentAttendanceArchive" +
+                 ") AS combined " +
+                 "LEFT JOIN student s ON combined.studentId = s.id " +
+                 "WHERE DATE(combined.date) = ? " +
+                 "AND COALESCE(s.gender, combined.gender) = ? " +
+                 "AND combined.section = '11-Apple'";
+
+    long presentCount = 0;
+    long absentCount = 0;
+
+    try (Connection con = ConnectionProvider.getCon();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+
+        ps.setDate(1, java.sql.Date.valueOf(today));
+        ps.setString(2, genderKeyword);
+
+        ResultSet rs = ps.executeQuery();
+while (rs.next()) {
+    List<Object> row = new ArrayList<>();
+    row.add(rs.getString("studentId"));
+    row.add(rs.getString("name"));
+    row.add(rs.getString("gender"));
+
+    // Parse raw date and time from DB
+    LocalDate rawDate = rs.getDate("date").toLocalDate();
+    LocalTime rawTime = rs.getTime("timeIn").toLocalTime();
+
+    // Assume DB is UTC, convert to Asia/Manila
+    ZoneId dbZone = ZoneId.of("UTC");
+    ZoneId phZone = ZoneId.of("Asia/Manila");
+
+    LocalDateTime utcDateTime = LocalDateTime.of(rawDate, rawTime);
+    ZonedDateTime phDateTime = utcDateTime.atZone(dbZone).withZoneSameInstant(phZone);
+
+    // Format for display
+    String formattedDate = phDateTime.format(DateTimeFormatter.ofPattern("MMM dd, yyyy"));
+    String formattedTime = phDateTime.format(DateTimeFormatter.ofPattern("hh:mma")).toLowerCase();
+
+    row.add(formattedDate);
+    row.add(formattedTime);
+    row.add(rs.getString("section"));
+
+    model.addRow(row.toArray());
+
+    presentCount++;
+}
+
+
+
+        // Count absents for Oracle + gender
+        String absentSql = "SELECT COUNT(*) AS count FROM attendance_summary " +
+                           "JOIN student ON attendance_summary.studentId = student.id " +
+                           "WHERE attendance_summary.date = ? AND attendance_summary.status = 'Absent' " +
+                           "AND student.gender = ? AND student.section = '11-Apple'";
+        try (PreparedStatement psAbsent = con.prepareStatement(absentSql)) {
+            psAbsent.setDate(1, java.sql.Date.valueOf(today));
+            psAbsent.setString(2, genderKeyword);
+            ResultSet rsAbsent = psAbsent.executeQuery();
+            if (rsAbsent.next()) {
+                absentCount = rsAbsent.getLong("count");
+            }
+        }
+
+        lblPresent.setText(String.valueOf(presentCount));
+        lblAbsent.setText(String.valueOf(absentCount));
+
+    } catch (Exception ex) {
+        JOptionPane.showMessageDialog(null, "Error filtering by gender: " + ex.getMessage());
+        ex.printStackTrace();
+    }
+}
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jScrollPane1 = new javax.swing.JScrollPane();
+        studentTable = new javax.swing.JTable();
+        generateBtn = new javax.swing.JButton();
+        exitbtn1 = new javax.swing.JButton();
+        fmaleBtn = new javax.swing.JButton();
+        maleBtn = new javax.swing.JButton();
+        jPanel14 = new javax.swing.JPanel();
+        jLabel4 = new javax.swing.JLabel();
+        txtSearch = new javax.swing.JTextField();
+        presentLBL = new javax.swing.JLabel();
+        lblPresent = new javax.swing.JLabel();
+        absentLBL = new javax.swing.JLabel();
+        lblAbsent = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setUndecorated(true);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
+
+        studentTable.setFont(new java.awt.Font("Segoe UI", 3, 10)); // NOI18N
+        studentTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {},
+                {},
+                {},
+                {}
+            },
+            new String [] {
+
+            }
+        ));
+        jScrollPane1.setViewportView(studentTable);
+
+        generateBtn.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        generateBtn.setText("GENERATE TO EXCEL");
+        generateBtn.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, null, java.awt.Color.darkGray, null, null));
+
+        exitbtn1.setFont(new java.awt.Font("Segoe UI Black", 1, 12)); // NOI18N
+        exitbtn1.setText("X");
+        exitbtn1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exitbtn1ActionPerformed(evt);
+            }
+        });
+
+        fmaleBtn.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        fmaleBtn.setText("FEMALE");
+        fmaleBtn.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, null, java.awt.Color.darkGray, null, null));
+
+        maleBtn.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        maleBtn.setText("MALE");
+        maleBtn.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, null, java.awt.Color.darkGray, null, null));
+
+        jPanel14 = new javax.swing.JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2d = (Graphics2D) g.create();
+                // Semi-transparent background (black with alpha = 60/255)
+                g2d.setColor(new Color(0, 0, 0, 60));
+                g2d.fillRect(0, 0, getWidth(), getHeight());
+                g2d.dispose();
+            }
+        };
+        jPanel14.setOpaque(false); // allow transparency
+        jPanel14.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jLabel4.setFont(new java.awt.Font("Segoe UI Black", 1, 14)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel4.setText("SEARCH: ");
+
+        txtSearch.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        txtSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtSearchKeyReleased(evt);
+            }
+        });
+
+        presentLBL.setFont(new java.awt.Font("Segoe UI Black", 1, 14)); // NOI18N
+        presentLBL.setForeground(new java.awt.Color(255, 255, 255));
+        presentLBL.setText("PRESENT:");
+
+        lblPresent.setFont(new java.awt.Font("Segoe UI Black", 1, 14)); // NOI18N
+        lblPresent.setForeground(new java.awt.Color(51, 255, 51));
+        lblPresent.setText("----------");
+
+        absentLBL.setFont(new java.awt.Font("Segoe UI Black", 1, 14)); // NOI18N
+        absentLBL.setForeground(new java.awt.Color(255, 255, 255));
+        absentLBL.setText("ABSENT:");
+
+        lblAbsent.setFont(new java.awt.Font("Segoe UI Black", 1, 14)); // NOI18N
+        lblAbsent.setForeground(new java.awt.Color(255, 0, 0));
+        lblAbsent.setText("----------");
+
+        jLabel1.setFont(new java.awt.Font("Sitka Subheading", 3, 45)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("APPLE ATTENDANCE");
+
+        javax.swing.GroupLayout jPanel14Layout = new javax.swing.GroupLayout(jPanel14);
+        jPanel14.setLayout(jPanel14Layout);
+        jPanel14Layout.setHorizontalGroup(
+            jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel14Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel14Layout.createSequentialGroup()
+                        .addComponent(absentLBL)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(lblAbsent))
+                    .addGroup(jPanel14Layout.createSequentialGroup()
+                        .addComponent(presentLBL)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblPresent)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 479, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel14Layout.createSequentialGroup()
+                        .addGap(42, 42, 42)
+                        .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel14Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel4)))
+                .addContainerGap())
+        );
+        jPanel14Layout.setVerticalGroup(
+            jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel14Layout.createSequentialGroup()
+                .addContainerGap(24, Short.MAX_VALUE)
+                .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(presentLBL)
+                        .addComponent(lblPresent))
+                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(absentLBL)
+                    .addComponent(lblAbsent))
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel14Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jLabel1))
+        );
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(22, 22, 22)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 970, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(generateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(maleBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(fmaleBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(28, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(exitbtn1))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(exitbtn1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                .addComponent(jPanel14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 329, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(generateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(maleBtn)
+                    .addComponent(fmaleBtn))
+                .addGap(17, 17, 17))
+        );
+
+        pack();
+        setLocationRelativeTo(null);
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void exitbtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitbtn1ActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_exitbtn1ActionPerformed
+
+    private void txtSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchKeyReleased
+        loadDataInTable();
+    }//GEN-LAST:event_txtSearchKeyReleased
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+          for(double i=0.0; i<=1.0;i +=0.1) {
+            String s = i+"";
+            float f = Float.valueOf(s);
+            this.setOpacity(f);
+            try {
+                Thread.sleep(40);
+            } catch (InterruptedException ex) {
+                System.getLogger(AppleAttendance.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            }
+        }
+    }//GEN-LAST:event_formWindowOpened
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
+            logger.log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(() -> new AppleAttendance().setVisible(true));
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel absentLBL;
+    private javax.swing.JButton exitbtn;
+    private javax.swing.JButton exitbtn1;
+    private javax.swing.JButton fmaleBtn;
+    private javax.swing.JButton generateBtn;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel4;
+    javax.swing.JPanel jPanel14;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblAbsent;
+    private javax.swing.JLabel lblPresent;
+    private javax.swing.JButton maleBtn;
+    private javax.swing.JLabel presentLBL;
+    private javax.swing.JTable studentTable;
+    private javax.swing.JTextField txtSearch;
+    // End of variables declaration//GEN-END:variables
+ private void loadDataInTable() {
+    List<String> columns = Arrays.asList("LRN", "NAME", "GENDER", "DATE", "TIME-IN", "GRADE & SEC");
+
+    String searchText = txtSearch.getText().replaceAll("\\p{C}", "").trim().toLowerCase();
+    LocalDate today = LocalDate.now();
+
+    DefaultTableModel model = new DefaultTableModel();
+    model.setColumnIdentifiers(columns.toArray());
+    studentTable.setModel(model);
+
+    // Query attendance records for "12-Java" only
+    StringBuilder sql = new StringBuilder(
+        "SELECT combined.studentId, combined.name, " +
+        "COALESCE(s.gender, combined.gender, 'N/A') as gender, " +
+        "combined.date, combined.timeIn, combined.section " +
+        "FROM (" +
+        "SELECT studentId, name, gender, date, timeIn, section FROM studentAttendancee " +
+        "UNION ALL " +
+        "SELECT studentId, name, gender, date, timeIn, section FROM studentAttendanceArchive" +
+        ") AS combined " +
+        "LEFT JOIN student s ON combined.studentId = s.id " +
+        "WHERE DATE(combined.date) = ? AND combined.section = '11-Apple'"
+    );
+
+    if (!searchText.isEmpty()) {
+        sql.append(" AND (LOWER(combined.name) LIKE ? OR combined.studentId LIKE ?)");
+    }
+
+    long presentCount = 0;
+    long absentCount = 0;
+
+    try (Connection con = ConnectionProvider.getCon();
+         PreparedStatement ps = con.prepareStatement(sql.toString())) {
+
+        ps.setDate(1, java.sql.Date.valueOf(today));
+
+        if (!searchText.isEmpty()) {
+            ps.setString(2, "%" + searchText + "%");
+            ps.setString(3, "%" + searchText + "%"); 
+        }
+
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            List<Object> row = new ArrayList<>();
+            row.add(rs.getString("studentId"));
+            row.add(rs.getString("name"));
+            row.add(rs.getString("gender"));
+
+            LocalDate rawDate = LocalDate.parse(rs.getString("date"));
+            LocalTime rawTime = LocalTime.parse(rs.getString("timeIn"));
+
+            ZoneId dbZone = ZoneId.of("UTC");
+            ZoneId localZone = ZoneId.of("Asia/Manila");
+
+            LocalDateTime utcDateTime = LocalDateTime.of(rawDate, rawTime);
+            ZonedDateTime localDateTime = utcDateTime.atZone(dbZone).withZoneSameInstant(localZone);
+
+            String formattedDate = localDateTime.format(DateTimeFormatter.ofPattern("MMM dd, yyyy"));
+            String formattedTime = localDateTime.format(DateTimeFormatter.ofPattern("hh:mma")).toLowerCase();
+
+            row.add(formattedDate);
+            row.add(formattedTime);
+            row.add(rs.getString("section"));
+
+            model.addRow(row.toArray());
+
+            presentCount++;
+        }
+
+        // Count absents for "12-Oracle" only
+        String absentSql = "SELECT COUNT(*) AS count FROM attendance_summary " +
+                           "JOIN student ON attendance_summary.studentId = student.id " +
+                           "WHERE attendance_summary.date = ? AND attendance_summary.status = 'Absent' " +
+                           "AND student.section = '11-Apple'";
+        try (PreparedStatement psAbsent = con.prepareStatement(absentSql)) {
+            psAbsent.setDate(1, java.sql.Date.valueOf(today));
+            ResultSet rsAbsent = psAbsent.executeQuery();
+            if (rsAbsent.next()) {
+                absentCount = rsAbsent.getLong("count");
+            }
+        }
+
+        lblPresent.setVisible(true);
+        lblAbsent.setVisible(true);
+        presentLBL.setVisible(true);
+        absentLBL.setVisible(true);
+
+        lblPresent.setText(String.valueOf(presentCount));
+        lblAbsent.setText(String.valueOf(absentCount));
+
+    } catch (Exception ex) {
+        JOptionPane.showMessageDialog(null, "Something went wrong: " + ex.getMessage());
+        ex.printStackTrace();
+    }
+}
+
+
+ private Long countWeekdays(LocalDate fromDate, LocalDate toDate) {
+    long count = 0;
+    LocalDate date = fromDate;
+    while (date.isBefore(toDate) || date.equals(toDate)) {
+        if (!(date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY)) {
+            count++;
+        }
+        date = date.plusDays(1);
+    }
+    return count;
+  }
+}

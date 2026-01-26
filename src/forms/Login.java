@@ -20,8 +20,17 @@ public class Login extends javax.swing.JFrame {
      */
     public Login() {
         initComponents();
-        BDUtility.setImage(this, "images/kkk.png", 753, 431);
-        this.getRootPane().setBorder(BorderFactory.createMatteBorder(6, 6, 6, 6, Color.GRAY));
+        BDUtility.setImage(this, "images/newbgs (1).jpg", 753, 431);
+        this.getRootPane().setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, Color.GRAY));
+        
+        showCheckbox.addItemListener(e -> {
+    if (showCheckbox.isSelected()) {
+        txtPassword.setEchoChar((char) 0); // Show password
+    } else {
+        txtPassword.setEchoChar('•'); // Hide password
+    }
+});
+
     }
 
     /**
@@ -37,9 +46,18 @@ public class Login extends javax.swing.JFrame {
         btnLogin = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        showCheckbox = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         txtPassword.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -47,9 +65,10 @@ public class Login extends javax.swing.JFrame {
             }
         });
 
-        btnLogin.setFont(new java.awt.Font("Segoe UI Black", 1, 14)); // NOI18N
+        btnLogin.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnLogin.setForeground(new java.awt.Color(51, 51, 51));
         btnLogin.setText("LOG IN");
+        btnLogin.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         btnLogin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnLoginActionPerformed(evt);
@@ -68,6 +87,10 @@ public class Login extends javax.swing.JFrame {
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("ENTER PASSWORD");
 
+        showCheckbox.setFont(new java.awt.Font("Segoe UI", 3, 10)); // NOI18N
+        showCheckbox.setForeground(new java.awt.Color(255, 255, 255));
+        showCheckbox.setText("SHOW PASSWORD");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -77,11 +100,13 @@ public class Login extends javax.swing.JFrame {
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel1)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(btnLogin)
-                        .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(showCheckbox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(174, 174, 174))
         );
         layout.setVerticalGroup(
@@ -92,9 +117,11 @@ public class Login extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnLogin)
-                .addContainerGap(167, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnLogin)
+                    .addComponent(showCheckbox))
+                .addContainerGap(177, Short.MAX_VALUE))
         );
 
         setSize(new java.awt.Dimension(665, 431));
@@ -109,10 +136,28 @@ public class Login extends javax.swing.JFrame {
         String password = new String(txtPassword.getPassword());
         if ("123".equalsIgnoreCase(password)) {
             this.dispose();
-            BDUtility.openForm(Dashboard.class.getSimpleName(), new Dashboard());           
-          }else if ("321".equalsIgnoreCase(password)) {
+            BDUtility.openForm(Dashboard.class.getSimpleName(), new Dashboard());   
+            
+          }else if ("java".equalsIgnoreCase(password)) {
             this.dispose();
             BDUtility.openForm(ViewAttendance.class.getSimpleName(), new ViewAttendance());
+            
+          }else if ("apple".equalsIgnoreCase(password)) {
+            this.dispose();
+            BDUtility.openForm(AppleAttendance.class.getSimpleName(), new AppleAttendance());
+            
+          }else if ("andriod".equalsIgnoreCase(password)) {
+            this.dispose();          
+            BDUtility.openForm(ViewAttendancee.class.getSimpleName(), new ViewAttendancee());
+            
+          }else if ("oracle".equalsIgnoreCase(password)) {
+            this.dispose();    
+            BDUtility.openForm(OracleAttendance.class.getSimpleName(), new OracleAttendance());  
+            
+           }else if ("mark".equalsIgnoreCase(password)) {
+            this.dispose();    
+            BDUtility.openForm(MarkAttendance.class.getSimpleName(), new MarkAttendance());  
+            
           } else {
             JOptionPane.showMessageDialog(null, "Invalid Password", "invalid", JOptionPane.ERROR_MESSAGE);
         }
@@ -121,6 +166,23 @@ public class Login extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         System.exit(0);
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+   for(double i=0.0; i<=1.0;i +=0.1) {
+            String s = i+"";
+            float f = Float.valueOf(s);
+            this.setOpacity(f);
+            try {
+                Thread.sleep(20);
+            } catch (InterruptedException ex) {
+                System.getLogger(Login.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            }
+        }
+    }//GEN-LAST:event_formWindowOpened
+
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_formWindowClosed
     
    
     /**
@@ -152,6 +214,7 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JButton btnLogin;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JCheckBox showCheckbox;
     private javax.swing.JPasswordField txtPassword;
     // End of variables declaration//GEN-END:variables
 }

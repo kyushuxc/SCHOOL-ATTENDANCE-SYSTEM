@@ -54,6 +54,7 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import utility.BDUtility;
 
@@ -73,7 +74,7 @@ public class MarkAttendance extends javax.swing.JFrame implements Runnable, Thre
     
     public MarkAttendance() {
         initComponents();
-        BDUtility.setImage(this, "images/kkk.png", 1218, 698);
+        BDUtility.setImage(this, "images/newbgs (2).jpg", 1218, 698);
         this.getRootPane().setBorder(BorderFactory.createMatteBorder(6, 6, 6, 6, Color.GRAY));
         initWebcam();
         
@@ -107,6 +108,11 @@ public class MarkAttendance extends javax.swing.JFrame implements Runnable, Thre
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         exitbtn.setFont(new java.awt.Font("Segoe UI Black", 1, 12)); // NOI18N
         exitbtn.setText("X");
@@ -209,6 +215,19 @@ dispose();
 
     }//GEN-LAST:event_exitbtnActionPerformed
 
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+  for(double i=0.0; i<=1.0;i +=0.1) {
+            String s = i+"";
+            float f = Float.valueOf(s);
+            this.setOpacity(f);
+            try {
+                Thread.sleep(20);
+            } catch (InterruptedException ex) {
+                System.getLogger(MarkAttendance.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            }
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_formWindowOpened
+
     /**
      * @param args the command line arguments
      */
@@ -297,8 +316,9 @@ public Thread newThread(Runnable r) {
                         resultMap.clear();
                         resultMap.putAll(parsedMap);
 
-                        String finalPath = BDUtility.getPath("images\\" + resultMap.get("id") + ".jpg");
-                        CircularImageFrame(finalPath);
+                        String resourcePath = BDUtility.getResourcePath(resultMap.get("id") + ".jpg");
+                        CircularImageFrame(resourcePath);
+
                     }
                 } catch (NotFoundException ex) {
                     // No QR code found in this frame
@@ -341,59 +361,65 @@ public Thread newThread(Runnable r) {
   }
      
     private BufferedImage imagee = null;
-   private void CircularImageFrame(String imagePath) {
-    try {
-        Connection con = ConnectionProvider.getCon();
-        Statement st = con.createStatement();
-        ResultSet rs = st.executeQuery("select * from student where id ='" + resultMap.get("id") + "'");
-        
+  private void CircularImageFrame(String imagePath) {
+    try (Connection con = ConnectionProvider.getCon();
+         Statement st = con.createStatement();
+         ResultSet rs = st.executeQuery("select * from student where id ='" + resultMap.get("id") + "'")) {
+
         if (!rs.next()) {
-            showPopUpForCertainDuration("Student is not Registered or Deleted", "Invalid Qr", JOptionPane.ERROR_MESSAGE);
+            SwingUtilities.invokeLater(() -> {
+                showPopUpForCertainDuration("Student is not Registered or Deleted", "Invalid QR", JOptionPane.ERROR_MESSAGE);
+            });
             return;
         }
 
-      imagee = null;
-      File imageFile = new File(imagePath);
-      if (imageFile.exists()) {
-         try {
-        imagee = ImageIO.read(imageFile);
-        imagee = createCircularImage(imagee);
-        ImageIcon icon = new ImageIcon(imagee);
-        lblImage.setIcon(icon);
-     } catch (Exception ex) {
+        BufferedImage imagee = null;
+        File imageFile = new File(imagePath);
+
+        if (imageFile.exists()) {
+            try {
+                imagee = ImageIO.read(imageFile);
+                imagee = createCircularImage(imagee);
+                ImageIcon icon = new ImageIcon(imagee);
+
+                SwingUtilities.invokeLater(() -> lblImage.setIcon(icon));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        } else {
+            BufferedImage fallback = new BufferedImage(300, 300, BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g2d = fallback.createGraphics();
+
+            g2d.setColor(Color.BLACK);
+            g2d.fillOval(25, 25, 250, 250);
+
+            g2d.setFont(new Font("Serif", Font.BOLD, 250));
+            g2d.setColor(Color.WHITE);
+            String name = resultMap.get("name");
+            if (name != null && !name.isEmpty()) {
+                g2d.drawString(String.valueOf(name.charAt(0)).toUpperCase(), 75, 225);
+            }
+            g2d.dispose();
+
+            ImageIcon imageIconn = new ImageIcon(fallback);
+            SwingUtilities.invokeLater(() -> lblImage.setIcon(imageIconn));
+        }
+
+        // ✅ Only update labels, no pack()/setVisible()
+        SwingUtilities.invokeLater(() -> {
+            lblName.setHorizontalAlignment(JLabel.CENTER);
+            lblName.setText(resultMap.get("name"));
+        });
+
+        if (!checkIn()) {
+            return;
+        }
+
+    } catch (Exception ex) {
         ex.printStackTrace();
     }
-      } else {
-           BufferedImage imageeee = new BufferedImage(300, 300, BufferedImage.TYPE_INT_ARGB);
-            Graphics2D g2d = imageeee.createGraphics();
+}
 
-           g2d.setColor(Color.BLACK);
-          g2d.fillOval(25, 25, 250, 250);
-
-         g2d.setFont(new Font("Serif", Font.BOLD, 250));
-          g2d.setColor(Color.WHITE);
-          String name = String.valueOf(resultMap.get("name"));
-           if (name != null && !name.isEmpty()) {
-             g2d.drawString(String.valueOf(name.charAt(0)).toUpperCase(), 75, 225);
-          }
-          g2d.dispose();
-
-      ImageIcon imageIconn = new ImageIcon(imageeee);
-      lblImage.setIcon(imageIconn);
-      this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-      this.pack();
-      this.setLocationRelativeTo(null); 
-      this.setVisible(true);        
-    }
-      lblName.setHorizontalAlignment(JLabel.CENTER);
-      lblName.setText(resultMap.get("name"));
-      if(!checkIn()){
-          return;
-      }
-       } catch (Exception ex) {
-        ex.printStackTrace();
-     }
-  }
 
     
    private void showPopUpForCertainDuration(String popUpMessage, String popUpHeader, Integer iconId) throws HeadlessException {
@@ -441,73 +467,65 @@ public Thread newThread(Runnable r) {
        
     }
 
-    private boolean checkIn() throws SQLException {
-        String popUpHeader = null;
+ private boolean checkIn() throws SQLException {
+    String popUpHeader = null;
     String popUpMessage = null;
     Color color = null;
+
+    LocalDate currentDate = LocalDate.now();
+    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    LocalDateTime currentDateTime = LocalDateTime.now();
+    DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+  String section = resultMap.get("section");
+String tableName;
+
+// Normalize and route based on grade prefix
+if (section != null && section.trim().toLowerCase().startsWith("11")) {
+    tableName = "studentAttendancee"; // Grade 11 table
+} else if (section != null && section.trim().toLowerCase().startsWith("12")) {
+    tableName = "studentAttendance";  // Grade 12 table
+} else {
+    // fallback or error
+    JOptionPane.showMessageDialog(null, "Unrecognized grade level in section: " + section);
+    return false;
+}
+
+
 
     Connection con = ConnectionProvider.getCon();
     Statement st = con.createStatement();
 
-    LocalDate currentDate = LocalDate.now();
-    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-    LocalDateTime currentDateTime = LocalDateTime.now();
-    DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
     // Check if student already checked in today
     ResultSet rs = st.executeQuery(
-        "SELECT * FROM studentattendance WHERE date='" + currentDate.format(dateFormatter) + 
-        "' AND studentId='" + resultMap.get("id") + "'");
-        
-    if(rs.next()) {
-        // Student already checked in today
-        String checkInTime = rs.getString("timeIn");
-        LocalDateTime checkInLocalDateTime = LocalDateTime.parse(checkInTime, dateTimeFormatter);
-        Duration duration = Duration.between(checkInLocalDateTime, currentDateTime);
-        
-        long hours = duration.toHours();
-        long minutes = duration.minusHours(hours).toMinutes();
-        long seconds = duration.minusHours(hours).minusMinutes(minutes).getSeconds();
+    "SELECT * FROM " + tableName + " WHERE date='" + currentDate.format(dateFormatter) +
+    "' AND studentId='" + resultMap.get("id") + "'");
 
-        if (!(hours > 0 || (hours == 0 && minutes >= 5))) {
-            long remainingMinutes = 4 - minutes;
-            long remainingSeconds = 60 - seconds;
+     String insertQuery = "INSERT INTO " + tableName + " (studentId, name, date, timeIn, section) VALUES (?,?,?,?,?)";
 
-            popUpMessage = String.format("Your work duration is less than 5 minutes\nYou can check out after: %d minutes and %d seconds", 
-            remainingMinutes, remainingSeconds);
-            popUpHeader = "Duration Warning";
 
-            showPopUpForCertainDuration(popUpMessage, popUpHeader, JOptionPane.WARNING_MESSAGE);
-            return false;
-        } else {
-            popUpMessage = "Already checked Attendance in today at " + checkInTime;
-            popUpHeader = "Already Attedance today";
-            showPopUpForCertainDuration(popUpMessage, popUpHeader, JOptionPane.WARNING_MESSAGE);
-            return false;
-        }
+    if (rs.next()) {
+        popUpMessage = "Already checked Attendance today.";
+        popUpHeader = "Duplicate Entry";
+        showPopUpForCertainDuration(popUpMessage, popUpHeader, JOptionPane.WARNING_MESSAGE);
+        return false;
     } else {
-        // First check-in today - Insert new record
-        
-        Connection connection = ConnectionProvider.getCon();
-   String insertQuery = "INSERT INTO studentattendance (studentId, name, date, timeIn, section) VALUES (?,?,?,?,?)";
-PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
+        // Insert into the chosen table
 
-preparedStatement.setString(1, resultMap.get("id"));
-preparedStatement.setString(2, resultMap.get("name"));
-preparedStatement.setString(3, currentDate.format(dateFormatter));
-preparedStatement.setString(4, currentDateTime.format(dateTimeFormatter));
-preparedStatement.setString(5, resultMap.get("section")); 
+        PreparedStatement preparedStatement = con.prepareStatement(insertQuery);
 
-
-    
+        preparedStatement.setString(1, resultMap.get("id"));
+        preparedStatement.setString(2, resultMap.get("name"));
+        preparedStatement.setString(3, currentDate.format(dateFormatter));
+        preparedStatement.setString(4, currentDateTime.format(dateTimeFormatter));
+        preparedStatement.setString(5, section);
 
         preparedStatement.executeUpdate();
         preparedStatement.close();
-        connection.close();
-        
-        popUpHeader = "Attedance Successful";
-        popUpMessage = "Attedance in at " + currentDateTime.format(dateTimeFormatter);
+        con.close();
+
+        popUpHeader = "Attendance Successful";
+        popUpMessage = "Attendance in at " + currentDateTime.format(dateTimeFormatter);
         color = Color.GREEN;
 
         lblCheckIn.setHorizontalAlignment(JLabel.CENTER);
@@ -515,16 +533,11 @@ preparedStatement.setString(5, resultMap.get("section"));
         lblCheckIn.setForeground(color);
         lblCheckIn.setBackground(Color.DARK_GRAY);
         lblCheckIn.setOpaque(true);
-        
+
         showPopUpForCertainDuration(popUpMessage, popUpHeader, JOptionPane.INFORMATION_MESSAGE);
-        
-        rs.close();
-        st.close();
-        con.close();
-        
         return true;
-     }
     }
+}
 
     @Override
    public void paint(Graphics g) {

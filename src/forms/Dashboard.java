@@ -4,6 +4,8 @@
  */
 package forms;
 import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 import utility.BDUtility;
@@ -20,8 +22,10 @@ public class Dashboard extends javax.swing.JFrame {
      */ 
     public Dashboard() {
         initComponents();
-        BDUtility.setImage(this, "images/kk.jpg", 1366, 768);
+        BDUtility.setImage(this, "images/newbgs (1).jpg", 1366, 768);
         this.getRootPane().setBorder(BorderFactory.createMatteBorder(6, 6, 6, 6, Color.GRAY));
+        
+         
     }
 
     /**
@@ -34,15 +38,25 @@ public class Dashboard extends javax.swing.JFrame {
     private void initComponents() {
 
         extBtn = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
         Registerbtn = new javax.swing.JButton();
+        Viewqrbtn = new javax.swing.JButton();
         Generatebtn = new javax.swing.JButton();
         Markattendancebtn = new javax.swing.JButton();
+        ViewAttendancebtn1 = new javax.swing.JButton();
         ViewAttendancebtn = new javax.swing.JButton();
-        Viewqrbtn = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         extBtn.setFont(new java.awt.Font("Segoe UI Black", 1, 12)); // NOI18N
         extBtn.setText("X");
@@ -52,16 +66,47 @@ public class Dashboard extends javax.swing.JFrame {
             }
         });
 
+        jLabel1.setFont(new java.awt.Font("Mongolian Baiti", 3, 67)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("SYSTEM DASHBOARD");
+
+        jPanel1 = new javax.swing.JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2d = (Graphics2D) g.create();
+                // Semi-transparent background (black with alpha = 60/255)
+                g2d.setColor(new Color(0, 0, 0, 60));
+                g2d.fillRect(0, 0, getWidth(), getHeight());
+                g2d.dispose();
+            }
+        };
+        jPanel1.setOpaque(false); // allow transparency
+        jPanel1.setBackground(new java.awt.Color(153, 153, 153));
+        jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jPanel1.setForeground(new java.awt.Color(102, 102, 102));
+
         Registerbtn.setFont(new java.awt.Font("Segoe UI Black", 1, 14)); // NOI18N
         Registerbtn.setText("REGISTER");
+        Registerbtn.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, null, java.awt.Color.darkGray, null, null));
         Registerbtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 RegisterbtnActionPerformed(evt);
             }
         });
 
+        Viewqrbtn.setFont(new java.awt.Font("Segoe UI Black", 1, 14)); // NOI18N
+        Viewqrbtn.setText("VIEWS STUDENT");
+        Viewqrbtn.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, null, java.awt.Color.darkGray, null, null));
+        Viewqrbtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ViewqrbtnActionPerformed(evt);
+            }
+        });
+
         Generatebtn.setFont(new java.awt.Font("Segoe UI Black", 1, 14)); // NOI18N
         Generatebtn.setText("GENERATE QR");
+        Generatebtn.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, null, java.awt.Color.darkGray, null, null));
         Generatebtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 GeneratebtnActionPerformed(evt);
@@ -70,102 +115,146 @@ public class Dashboard extends javax.swing.JFrame {
 
         Markattendancebtn.setFont(new java.awt.Font("Segoe UI Black", 1, 14)); // NOI18N
         Markattendancebtn.setText("MARK ATTENDADANCE");
+        Markattendancebtn.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, null, java.awt.Color.darkGray, null, null));
         Markattendancebtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MarkattendancebtnActionPerformed(evt);
             }
         });
 
+        ViewAttendancebtn1.setFont(new java.awt.Font("Segoe UI Black", 1, 14)); // NOI18N
+        ViewAttendancebtn1.setText("GRADE 11");
+        ViewAttendancebtn1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, null, java.awt.Color.darkGray, null, null));
+        ViewAttendancebtn1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ViewAttendancebtn1ActionPerformed(evt);
+            }
+        });
+
         ViewAttendancebtn.setFont(new java.awt.Font("Segoe UI Black", 1, 14)); // NOI18N
-        ViewAttendancebtn.setText("VIEW STUDENT ATTENDANCE");
+        ViewAttendancebtn.setText("GRADE 12");
+        ViewAttendancebtn.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, null, java.awt.Color.darkGray, null, null));
         ViewAttendancebtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ViewAttendancebtnActionPerformed(evt);
             }
         });
 
-        Viewqrbtn.setFont(new java.awt.Font("Segoe UI Black", 1, 14)); // NOI18N
-        Viewqrbtn.setText("VIEWS STUDENT");
-        Viewqrbtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ViewqrbtnActionPerformed(evt);
-            }
-        });
-
-        jLabel1.setFont(new java.awt.Font("Sitka Small", 0, 48)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("SYSTEM DASHBOARD");
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(47, 47, 47)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(Viewqrbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Registerbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(70, 70, 70)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(Generatebtn, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(100, 100, 100))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(Markattendancebtn, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(76, 76, 76)))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(ViewAttendancebtn1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(ViewAttendancebtn, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE))
+                .addContainerGap(66, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(51, 51, 51)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(ViewAttendancebtn1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(Registerbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(Generatebtn, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(26, 26, 26)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ViewAttendancebtn, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Markattendancebtn, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Viewqrbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(56, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 1328, Short.MAX_VALUE)
-                .addComponent(extBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap(334, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(387, 387, 387))
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(303, 303, 303))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(Registerbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(37, 37, 37)
-                        .addComponent(Viewqrbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(33, 33, 33)
-                        .addComponent(Generatebtn, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(42, 42, 42)
-                        .addComponent(Markattendancebtn, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(31, 31, 31)
-                        .addComponent(ViewAttendancebtn)
-                        .addGap(139, 139, 139))))
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 738, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(293, 293, 293))
+                    .addComponent(extBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(extBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(12, 12, 12)
-                .addComponent(jLabel1)
+                .addGap(154, 154, 154)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(Registerbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Generatebtn, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Markattendancebtn, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ViewAttendancebtn, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Viewqrbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 618, Short.MAX_VALUE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(257, Short.MAX_VALUE))
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void extBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_extBtnActionPerformed
-        System.exit(0);
-       
-    }//GEN-LAST:event_extBtnActionPerformed
+    private void ViewAttendancebtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ViewAttendancebtn1ActionPerformed
+        BDUtility.openForm(edzSection.class.getSimpleName(), new edzSection());
+    }//GEN-LAST:event_ViewAttendancebtn1ActionPerformed
+
+    private void ViewqrbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ViewqrbtnActionPerformed
+        BDUtility.openForm(ViewUser.class.getSimpleName(), new ViewUser());
+    }//GEN-LAST:event_ViewqrbtnActionPerformed
+
+    private void ViewAttendancebtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ViewAttendancebtnActionPerformed
+        BDUtility.openForm(budzSection.class.getSimpleName(), new budzSection());
+    }//GEN-LAST:event_ViewAttendancebtnActionPerformed
+
+    private void MarkattendancebtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MarkattendancebtnActionPerformed
+        BDUtility.openForm(MarkAttendance.class.getSimpleName(), new MarkAttendance());
+    }//GEN-LAST:event_MarkattendancebtnActionPerformed
+
+    private void GeneratebtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GeneratebtnActionPerformed
+        BDUtility.openForm(GenerateQr.class.getSimpleName(), new GenerateQr());
+    }//GEN-LAST:event_GeneratebtnActionPerformed
 
     private void RegisterbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RegisterbtnActionPerformed
 
         BDUtility.openForm(UserRegistration.class.getSimpleName(), new UserRegistration());
     }//GEN-LAST:event_RegisterbtnActionPerformed
 
-    private void ViewqrbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ViewqrbtnActionPerformed
-        BDUtility.openForm(ViewUser.class.getSimpleName(), new ViewUser());
-    }//GEN-LAST:event_ViewqrbtnActionPerformed
+    private void extBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_extBtnActionPerformed
+        System.exit(0);
 
-    private void GeneratebtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GeneratebtnActionPerformed
-       BDUtility.openForm(GenerateQr.class.getSimpleName(), new GenerateQr());
-    }//GEN-LAST:event_GeneratebtnActionPerformed
+    }//GEN-LAST:event_extBtnActionPerformed
 
-    private void MarkattendancebtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MarkattendancebtnActionPerformed
-         BDUtility.openForm(MarkAttendance.class.getSimpleName(), new MarkAttendance());
-    }//GEN-LAST:event_MarkattendancebtnActionPerformed
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+     for(double i=0.0; i<=1.0;i +=0.1) {
+            String s = i+"";
+            float f = Float.valueOf(s);
+            this.setOpacity(f);
+            try {
+                Thread.sleep(40);
+            } catch (InterruptedException ex) {
+                System.getLogger(Dashboard.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            }
+        }
+    }//GEN-LAST:event_formWindowOpened
 
-    private void ViewAttendancebtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ViewAttendancebtnActionPerformed
-        BDUtility.openForm(ViewAttendance.class.getSimpleName(), new ViewAttendance());
-    }//GEN-LAST:event_ViewAttendancebtnActionPerformed
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_formWindowClosed
 
     /**
      * @param args the command line arguments
@@ -195,10 +284,12 @@ public class Dashboard extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Generatebtn;
     private javax.swing.JButton Markattendancebtn;
-    private javax.swing.JButton Registerbtn;
+    javax.swing.JButton Registerbtn;
     private javax.swing.JButton ViewAttendancebtn;
+    private javax.swing.JButton ViewAttendancebtn1;
     private javax.swing.JButton Viewqrbtn;
     private javax.swing.JButton extBtn;
     private javax.swing.JLabel jLabel1;
+    javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 }

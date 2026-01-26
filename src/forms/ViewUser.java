@@ -11,6 +11,7 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.nio.file.Paths;
 import java.util.Objects;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -32,8 +33,9 @@ public class ViewUser extends javax.swing.JFrame {
      */
     public ViewUser() {
         initComponents();
-        BDUtility.setImage(this, "images/kkk.png", 1366, 768);
+        BDUtility.setImage(this, "images/newbgs (2).jpg", 1366, 768);
         this.getRootPane().setBorder(BorderFactory.createMatteBorder(6, 6, 6, 6, Color.GRAY));
+        
     }
 
     /**
@@ -55,12 +57,20 @@ public class ViewUser extends javax.swing.JFrame {
         deleteBtn = new javax.swing.JButton();
         updateBtn = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        Grdbtn11 = new javax.swing.JButton();
+        Grdbtn12 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentShown(java.awt.event.ComponentEvent evt) {
                 formComponentShown(evt);
+            }
+        });
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
             }
         });
 
@@ -97,6 +107,7 @@ public class ViewUser extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        studentTable.setFont(new java.awt.Font("Segoe UI", 3, 10)); // NOI18N
         studentTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null},
@@ -105,7 +116,7 @@ public class ViewUser extends javax.swing.JFrame {
                 {null, null, null, null, null, null}
             },
             new String [] {
-                "LRN", "NAME", "GENDER", "SECTION", "ADVISER", "IMAGE NAME"
+                "LRN", "NAME", "GENDER", "GRADE & SEC", "ADVISER", "IMAGE NAME"
             }
         ));
         studentTable.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -120,6 +131,7 @@ public class ViewUser extends javax.swing.JFrame {
         jLabel2.setText("SEARCH:");
 
         txtSearch.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        txtSearch.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, null, java.awt.Color.darkGray, null, null));
         txtSearch.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtSearchKeyReleased(evt);
@@ -128,6 +140,7 @@ public class ViewUser extends javax.swing.JFrame {
 
         deleteBtn.setFont(new java.awt.Font("Segoe UI Black", 1, 14)); // NOI18N
         deleteBtn.setText("DELETE");
+        deleteBtn.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, null, java.awt.Color.darkGray, null, null));
         deleteBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 deleteBtnActionPerformed(evt);
@@ -136,39 +149,72 @@ public class ViewUser extends javax.swing.JFrame {
 
         updateBtn.setFont(new java.awt.Font("Segoe UI Black", 1, 14)); // NOI18N
         updateBtn.setText("UPDATE");
+        updateBtn.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, null, java.awt.Color.darkGray, null, null));
         updateBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 updateBtnActionPerformed(evt);
             }
         });
 
-        jLabel1.setFont(new java.awt.Font("Sitka Small", 0, 48)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Sitka Small", 0, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("VIEW ATTENDANCE");
+        jLabel1.setText("UPLOAD PHOTO (OPTIONAL)");
+
+        jLabel3.setFont(new java.awt.Font("Sitka Small", 0, 48)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel3.setText("STUDENT REGISTERED");
+
+        Grdbtn11.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
+        Grdbtn11.setText("GRADE 11");
+        Grdbtn11.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, null, java.awt.Color.darkGray, null, null));
+        Grdbtn11.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Grdbtn11ActionPerformed(evt);
+            }
+        });
+
+        Grdbtn12.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
+        Grdbtn12.setText("GRADE 12");
+        Grdbtn12.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, null, java.awt.Color.darkGray, null, null));
+        Grdbtn12.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Grdbtn12ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(9, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 815, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(340, 340, 340)
+                        .addGap(17, 17, 17)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 815, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(10, 10, 10))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(Grdbtn11, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(Grdbtn12, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel3)
+                        .addGap(123, 123, 123)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(56, 56, 56)
                         .addComponent(exitbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jInternalFrame1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jInternalFrame1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(45, 45, 45)
+                        .addGap(29, 29, 29)
                         .addComponent(deleteBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(updateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -178,27 +224,33 @@ public class ViewUser extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(14, 14, 14)
-                .addComponent(exitbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jInternalFrame1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(deleteBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(updateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(72, 72, 72)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(exitbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(jLabel1)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jInternalFrame1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(deleteBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(updateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(21, 21, 21))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel1)))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(46, Short.MAX_VALUE))
+                            .addComponent(Grdbtn12, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(Grdbtn11, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
         pack();
@@ -215,7 +267,7 @@ public class ViewUser extends javax.swing.JFrame {
 
     private void formComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentShown
         try{
-            fetchUser(null);
+            fetchUserByGrade(null);
         }catch (Exception ex){
             ex.printStackTrace();
         }
@@ -230,13 +282,18 @@ public class ViewUser extends javax.swing.JFrame {
         String imageName = Objects.isNull(value) ? null : value.toString();
 
         if (imageName != null && !imageName.trim().isEmpty()) {
-            String imagePath = BDUtility.getPath("/images" + File.separator + imageName);
-            File imageFile = new File(imagePath);
-            if (imageFile.exists()) {
-                ImageIcon icon = new ImageIcon(imagePath);
+            imageName = imageName.trim();
+
+            // ✅ Load from resources inside JAR
+            String resourcePath = BDUtility.getResourcePath(imageName);
+            java.net.URL imgURL = BDUtility.class.getResource(resourcePath);
+
+            if (imgURL != null) {
+                ImageIcon icon = new ImageIcon(imgURL);
                 Image image = icon.getImage().getScaledInstance(322, 286, Image.SCALE_SMOOTH);
                 lblimage.setIcon(new ImageIcon(image));
             } else {
+                System.out.println("Image not found in JAR: " + resourcePath);
                 lblimage.setIcon(null);
                 JOptionPane.showMessageDialog(null, "Either image has been deleted or not found.", "Image Not Found", JOptionPane.WARNING_MESSAGE);
             }
@@ -245,19 +302,57 @@ public class ViewUser extends javax.swing.JFrame {
         }
     } else {
         JOptionPane.showMessageDialog(null, "No row selected.", "Selection Error", JOptionPane.WARNING_MESSAGE);
-      }
-    
-    new javax.swing.Timer(10000, new ActionListener() {
-    public void actionPerformed(ActionEvent evt) {
-        try {
-            fetchUser(txtSearch.getText().trim()); // use current search text
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
     }
-}).start();
-    }//GEN-LAST:event_studentTableMouseClicked
 
+    new javax.swing.Timer(10000, new ActionListener() {
+        public void actionPerformed(ActionEvent evt) {
+            try {
+                fetchUser(txtSearch.getText().trim()); // use current search text
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }).start();
+
+    }//GEN-LAST:event_studentTableMouseClicked
+private void fetchUser(String searchText) throws Exception {
+    filterTable(searchText);
+}
+
+private void filterTable(String searchText) {
+    DefaultTableModel model = (DefaultTableModel) studentTable.getModel();
+    model.setRowCount(0);
+    try {
+        Connection con = ConnectionProvider.getCon();
+        PreparedStatement ps;
+        
+        if (searchText == null || searchText.trim().isEmpty()) {
+            ps = con.prepareStatement("SELECT * FROM student");
+        } else {
+            ps = con.prepareStatement("SELECT * FROM student WHERE name LIKE ?");
+            ps.setString(1, "%" + searchText + "%");
+        }
+        
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            model.addRow(new Object[] {
+                rs.getString("id"),
+                rs.getString("name"),
+                rs.getString("gender"),
+                rs.getString("section"),
+                rs.getString("adviser"),
+                rs.getString("imagename")
+            });
+        }
+        rs.close();
+        ps.close();
+    } catch (Exception ex) {
+        ex.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Error loading students.", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+}
+    
+     
     private void txtSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchKeyReleased
         try{
             fetchUser(txtSearch.getText().toString());
@@ -301,20 +396,48 @@ public class ViewUser extends javax.swing.JFrame {
     private void updateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateBtnActionPerformed
        BDUtility.openForm(Updatestudent.class.getSimpleName(), new Updatestudent());
     }//GEN-LAST:event_updateBtnActionPerformed
+
+    private void Grdbtn11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Grdbtn11ActionPerformed
+          try {
+        fetchUserByGrade("11");
+    } catch (Exception ex) {
+        ex.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Error filtering Grade 11 students.", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    }//GEN-LAST:event_Grdbtn11ActionPerformed
+
+    private void Grdbtn12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Grdbtn12ActionPerformed
+          try {
+        fetchUserByGrade("12");
+    } catch (Exception ex) {
+        ex.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Error filtering Grade 12 students.", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+    }//GEN-LAST:event_Grdbtn12ActionPerformed
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+   for(double i=0.0; i<=1.0;i +=0.1) {
+            String s = i+"";
+            float f = Float.valueOf(s);
+            this.setOpacity(f);
+            try {
+                Thread.sleep(30);
+            } catch (InterruptedException ex) {
+                System.getLogger(ViewUser.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            }
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_formWindowOpened
    
-    private void fetchUser(String searchText) throws Exception {
+   private void fetchUserByGrade(String grade) throws Exception {
     DefaultTableModel model = (DefaultTableModel) studentTable.getModel();
     model.setRowCount(0);
     try {
         Connection con = ConnectionProvider.getCon();
-        Statement st = con.createStatement();
-        String query;
-        if (searchText == null || searchText.trim().isEmpty()) {
-            query = "SELECT * FROM student";
-        } else {
-            query = "SELECT * FROM student WHERE name LIKE '%" + searchText + "%'";
-        }
-        ResultSet rs = st.executeQuery(query);
+        PreparedStatement ps = con.prepareStatement("SELECT * FROM student WHERE section LIKE ?");
+        ps.setString(1, grade + "%"); // Matches "11-Finance", "12-Java", etc.
+        
+        ResultSet rs = ps.executeQuery();
         while (rs.next()) {
             model.addRow(new Object[] {
                 rs.getString("id"),
@@ -325,9 +448,16 @@ public class ViewUser extends javax.swing.JFrame {
                 rs.getString("imagename")
             });
         }
+        
+        // Clear the image preview when filtering
+        lblimage.setIcon(null);
+        
+        // Clear search text to indicate filter is active
+        txtSearch.setText("");
+        
     } catch (Exception ex) {
         ex.printStackTrace();
-        JOptionPane.showMessageDialog(null, "Something went wrong.");
+        JOptionPane.showMessageDialog(null, "Error loading Grade " + grade + " students.", "Error", JOptionPane.ERROR_MESSAGE);
     }
 }
     
@@ -358,11 +488,14 @@ public class ViewUser extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton Grdbtn11;
+    private javax.swing.JButton Grdbtn12;
     private javax.swing.JButton deleteBtn;
     private javax.swing.JButton exitbtn;
     private javax.swing.JInternalFrame jInternalFrame1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblimage;
     private javax.swing.JTable studentTable;
