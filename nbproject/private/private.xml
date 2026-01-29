@@ -11,21 +11,6 @@
         </file>
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/C:/Users/Pejj/Documents/NetBeansProjects/Attendance/src/forms/Dashboard.java</file>
-            <file>file:/C:/Users/Pejj/Documents/NetBeansProjects/Attendance/src/forms/AppleAttendance.java</file>
-            <file>file:/C:/Users/Pejj/Documents/NetBeansProjects/Attendance/src/forms/edzSection.java</file>
-            <file>file:/C:/Users/Pejj/Documents/NetBeansProjects/Attendance/src/forms/OracleAttendance.java</file>
-            <file>file:/C:/Users/Pejj/Documents/NetBeansProjects/Attendance/src/forms/GenerateQr.java</file>
-            <file>file:/C:/Users/Pejj/Documents/NetBeansProjects/Attendance/src/forms/ViewUser.java</file>
-            <file>file:/C:/Users/Pejj/Documents/NetBeansProjects/Attendance/src/forms/ViewAttendance.java</file>
-            <file>file:/C:/Users/Pejj/Documents/NetBeansProjects/Attendance/src/forms/MarkAttendance.java</file>
-            <file>file:/C:/Users/Pejj/Documents/NetBeansProjects/Attendance/src/forms/Login.java</file>
-            <file>file:/C:/Users/Pejj/Documents/NetBeansProjects/Attendance/src/forms/UserRegistration.java</file>
-            <file>file:/C:/Users/Pejj/Documents/NetBeansProjects/Attendance/src/forms/budzSection.java</file>
-            <file>file:/C:/Users/Pejj/Documents/NetBeansProjects/Attendance/src/forms/ViewAttendancee.java</file>
-            <file>file:/C:/Users/Pejj/Documents/NetBeansProjects/Attendance/src/dao/tables.java</file>
-            <file>file:/C:/Users/Pejj/Documents/NetBeansProjects/Attendance/src/forms/Updatestudent.java</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>

@@ -470,7 +470,7 @@ public class UserRegistration extends javax.swing.JFrame {
 
             File saveFile = new File(saveDir, imageName);
 
-            BufferedImage scaledImage = BDUtility.scaleImage(originalImage, ImageIO.read(selectedFile));
+            BufferedImage scaledImage = BDUtility.scaleImage(originalImage, 800, 800);
             ImageIO.write(scaledImage, extension, saveFile);
 
             return imageName;

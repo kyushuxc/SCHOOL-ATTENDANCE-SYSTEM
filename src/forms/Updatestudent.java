@@ -42,6 +42,16 @@ public class Updatestudent extends javax.swing.JFrame {
         initComponents();
         BDUtility.setImage(this, "images/newbgs (2).jpg", 882, 510);
         this.getRootPane().setBorder(BorderFactory.createMatteBorder(6, 6, 6, 6, Color.GRAY));
+                
+        jLabelNewLrn = new javax.swing.JLabel();
+        jLabelNewLrn.setFont(new java.awt.Font("SansSerif", 1, 20));
+        jLabelNewLrn.setForeground(new java.awt.Color(255, 255, 255));
+        jLabelNewLrn.setText("New Lrn:");
+
+        txtNewLrn = new javax.swing.JTextField();
+        txtNewLrn.setFont(new java.awt.Font("Segoe UI", 1, 14));
+        txtNewLrn.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, null, java.awt.Color.darkGray, null, null));
+        
         
     }
  
@@ -383,19 +393,25 @@ private javax.swing.JLabel jLabelNewLrn;
 }                                        
 
 private void clearForm() {
-    txtLrn.setText("");  
+    txtLrn.setText("");
+    txtNewLrn.setText("");
     txtName.setText("");
     txtSection.setText("");
     txtAdviser.setText("");
     lblimage.setIcon(null);
     radioMale.setSelected(false);
     radioFemale.setSelected(false);
+    existingImagename = null;
+    originalImage = null;
+    selectedFile = null;
+    studentFound = false; // 🔄 Reset flag      // ADDED
     }//GEN-LAST:event_btnClearActionPerformed
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
-   try {
-        String oldLrn = txtLrn.getText().trim(); // current LRN
-        String newLrn = txtNewLrn.getText().trim(); // new LRN
+
+    try {
+        String oldLrn = txtLrn.getText().trim();
+        String newLrn = txtNewLrn.getText().trim();
         String name = txtName.getText().trim();
         String gender = radioMale.isSelected() ? "Male" : radioFemale.isSelected() ? "Female" : "";
         String section = txtSection.getText().trim();
@@ -420,6 +436,21 @@ private void clearForm() {
         if (!rs.next()) {
             JOptionPane.showMessageDialog(null, "LRN not found.", "Not Found", JOptionPane.WARNING_MESSAGE);
             return;
+        }
+
+        // Check if new LRN already exists (only if it's different from old LRN)
+        if (!oldLrn.equals(newLrn)) {
+            PreparedStatement checkPs = connection.prepareStatement("SELECT id FROM student WHERE id = ?");
+            checkPs.setString(1, newLrn);
+            ResultSet checkRs = checkPs.executeQuery();
+            if (checkRs.next()) {
+                JOptionPane.showMessageDialog(null, 
+                    "New LRN '" + newLrn + "' already exists in the database. Please choose a different LRN.", 
+                    "Duplicate LRN", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            checkRs.close();
+            checkPs.close();
         }
 
         String imageName = saveImage(name);
@@ -449,18 +480,21 @@ private void clearForm() {
 
         preparedStatement.executeUpdate();
 
-        // Optional: update attendance tables too
-        PreparedStatement ps1 = connection.prepareStatement("UPDATE studentAttendance SET studentId=? WHERE studentId=?");
+        // Update attendance tables
+        PreparedStatement ps1 = connection.prepareStatement(
+            "UPDATE studentAttendance12 SET studentId=? WHERE studentId=?");
         ps1.setString(1, newLrn);
         ps1.setString(2, oldLrn);
         ps1.executeUpdate();
 
-        PreparedStatement ps2 = connection.prepareStatement("UPDATE studentAttendanceArchive SET studentId=? WHERE studentId=?");
+        PreparedStatement ps2 = connection.prepareStatement(
+            "UPDATE studentAttendanceArchive SET studentId=? WHERE studentId=?");
         ps2.setString(1, newLrn);
         ps2.setString(2, oldLrn);
         ps2.executeUpdate();
 
-        PreparedStatement ps3 = connection.prepareStatement("UPDATE studentAttendancee SET studentId=? WHERE studentId=?");
+        PreparedStatement ps3 = connection.prepareStatement(
+            "UPDATE studentAttendance11 SET studentId=? WHERE studentId=?");
         ps3.setString(1, newLrn);
         ps3.setString(2, oldLrn);
         ps3.executeUpdate();
@@ -484,7 +518,7 @@ private void clearForm() {
             if (!saveDir.exists()) saveDir.mkdirs();
 
             File saveFile = new File(saveDir, imageName);
-            BufferedImage scaledImage = BDUtility.scaleImage(originalImage, ImageIO.read(selectedFile));
+           BufferedImage scaledImage = BDUtility.scaleImage(originalImage, 800, 800);
             ImageIO.write(scaledImage, extension, saveFile);
 
             return imageName;
@@ -496,83 +530,67 @@ private void clearForm() {
 }
 
 
-   
+    private boolean studentFound = false;
     private void searchBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchBtnActionPerformed
-        String existingImagename = null;
-        String lrnText = txtLrn.getText().trim();
-        
-         
-   if (lrnText.isEmpty() || !lrnText.matches("\\d+")) {
+    String lrnText = txtLrn.getText().trim();
+    
+    if (lrnText.isEmpty() || !lrnText.matches("\\d+")) {
         JOptionPane.showMessageDialog(null, "Invalid LRN. Must be a number.", "Invalid", JOptionPane.ERROR_MESSAGE);
         return;
     }
 
-    try {
-        long lrn = Long.parseLong(lrnText); // use long instead of int
+   try {
+    long lrn = Long.parseLong(lrnText);
 
-        Connection con = ConnectionProvider.getCon();
-        PreparedStatement ps = con.prepareStatement("SELECT * FROM student WHERE id = ?");
-        ps.setLong(1, lrn);
-        ResultSet rs = ps.executeQuery();
+    Connection con = ConnectionProvider.getCon();
+    PreparedStatement ps = con.prepareStatement("SELECT * FROM student WHERE id = ?");
+    ps.setLong(1, lrn);
+    ResultSet rs = ps.executeQuery();
 
-        if (rs.next()) {
-            txtName.setText(rs.getString("name"));
-            txtSection.setText(rs.getString("section"));
-            txtAdviser.setText(rs.getString("adviser"));
+    if (rs.next()) {
+        studentFound = true; // ✅ Mark student as found
 
-            String gender = rs.getString("gender");
-            radioMale.setSelected("Male".equalsIgnoreCase(gender));
-            radioFemale.setSelected("Female".equalsIgnoreCase(gender));
+        txtName.setText(rs.getString("name"));
+        txtSection.setText(rs.getString("section"));
+        txtAdviser.setText(rs.getString("adviser"));
 
-     
-      File externalFile = new File("images", existingImagename);
+        String gender = rs.getString("gender");
+        radioMale.setSelected("Male".equalsIgnoreCase(gender));
+        radioFemale.setSelected("Female".equalsIgnoreCase(gender));
 
-    if (externalFile.exists()) {
-    ImageIcon icon = new ImageIcon(externalFile.getAbsolutePath());
-    java.awt.Image scaledImage = icon.getImage().getScaledInstance(323, 386, java.awt.Image.SCALE_SMOOTH);
-    lblimage.setIcon(new ImageIcon(scaledImage));
-    } else {
-    // fallback to bundled resource
-    java.net.URL imgURL = BDUtility.class.getResource("/images/" + existingImagename);
-    if (imgURL != null) {
-        ImageIcon icon = new ImageIcon(imgURL);
-        java.awt.Image scaledImage = icon.getImage().getScaledInstance(323, 386, java.awt.Image.SCALE_SMOOTH);
-        lblimage.setIcon(new ImageIcon(scaledImage));
-    } else {
-        lblimage.setIcon(null);
-        JOptionPane.showMessageDialog(null, "Image not found: " + existingImagename, "Image Not Found", JOptionPane.WARNING_MESSAGE);
-    }
+        existingImagename = rs.getString("imagename");
+        txtNewLrn.setText(String.valueOf(lrn));
 
+        if (existingImagename != null && !existingImagename.isEmpty()) {
+            File externalFile = new File("images", existingImagename);
+            if (externalFile.exists()) {
+                ImageIcon icon = new ImageIcon(externalFile.getAbsolutePath());
+                java.awt.Image scaledImage = icon.getImage().getScaledInstance(323, 386, java.awt.Image.SCALE_SMOOTH);
+                lblimage.setIcon(new ImageIcon(scaledImage));
             }
-        } else {
-            JOptionPane.showMessageDialog(null, "No student found with LRN: " + lrn, "Not Found", JOptionPane.WARNING_MESSAGE);
         }
-
-    } catch (NumberFormatException ex) {
-        JOptionPane.showMessageDialog(null, "LRN is too large or invalid.", "Error", JOptionPane.ERROR_MESSAGE);
-    } catch (Exception ex) {
-        ex.printStackTrace();
-        JOptionPane.showMessageDialog(null, "Database error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    } else {
+        studentFound = false; // ❌ Mark student as not found
+        JOptionPane.showMessageDialog(null, "LRN not found.", "Not Found", JOptionPane.WARNING_MESSAGE);
     }
+} catch (Exception ex) {
+    studentFound = false;
+    ex.printStackTrace();
+    JOptionPane.showMessageDialog(null, "Search failed: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+}
     }//GEN-LAST:event_searchBtnActionPerformed
   
     
     private void radioMaleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioMaleActionPerformed
-        String gender = "";
-      if (radioMale.isSelected()) {
-    gender = "Male";
-     } else if (radioFemale.isSelected()) {
-    gender = "Female";
-     }
+     if (radioMale.isSelected()) {
+        radioFemale.setSelected(false);
+    }
     }//GEN-LAST:event_radioMaleActionPerformed
 
     private void radioFemaleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioFemaleActionPerformed
-        String gender = "";
-    if (radioMale.isSelected()) {
-    gender = "Male";
-   } else if (radioFemale.isSelected()) {
-    gender = "Female";
-   }
+    if (radioFemale.isSelected()) {
+        radioMale.setSelected(false);
+    }
     }//GEN-LAST:event_radioFemaleActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened

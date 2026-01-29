@@ -18,9 +18,9 @@ public class tables {
 
             st = con.createStatement();
 
-            // Create student table
+            // ✅ Create student table with LRN as primary key
             st.executeUpdate("CREATE TABLE IF NOT EXISTS student ("
-                    + "id BIGINT PRIMARY KEY AUTO_INCREMENT, "
+                    + "id BIGINT PRIMARY KEY, "   // <-- LRN is entered manually, no AUTO_INCREMENT
                     + "name VARCHAR(100) NOT NULL, "
                     + "gender VARCHAR(10), "
                     + "section VARCHAR(50), "
@@ -101,12 +101,8 @@ public class tables {
                 "SELECT studentId, name, gender, date, timeIn, section FROM studentAttendancee; " +
                 "DELETE FROM studentAttendancee; " +
                 "END"
-                    
-                       
             );
-            
-  
- 
+
             // ✅ Daily attendance summary event
             st.executeUpdate("DROP EVENT IF EXISTS mark_daily_attendance");
             st.executeUpdate(

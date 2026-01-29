@@ -62,8 +62,10 @@ public class ViewAttendancee extends javax.swing.JFrame {
     initComponents();
     BDUtility.setImage(this, "images/newbgs (2).jpg", 1020, 528);
     this.getRootPane().setBorder(BorderFactory.createMatteBorder(6, 6, 6, 6, Color.GRAY));
+    setupViewAllButton(viewAllBtn, studentTable);
+
     
-    txtSearch = new JTextField(); // or linked via GUI designer
+    setupGenerateExcel(generateBtn, studentTable);
     
   maleBtn.addActionListener(new java.awt.event.ActionListener() {
     public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -191,6 +193,7 @@ private void clearTablePreserveData() {
     }
 }
 
+  
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -215,6 +218,7 @@ private void clearTablePreserveData() {
         absentLBL = new javax.swing.JLabel();
         lblAbsent = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
+        viewAllBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -242,6 +246,11 @@ private void clearTablePreserveData() {
         generateBtn.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         generateBtn.setText("GENERATE TO EXCEL");
         generateBtn.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, null, java.awt.Color.darkGray, null, null));
+        generateBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                generateBtnActionPerformed(evt);
+            }
+        });
 
         exitbtn.setFont(new java.awt.Font("Segoe UI Black", 1, 12)); // NOI18N
         exitbtn.setText("X");
@@ -350,6 +359,15 @@ private void clearTablePreserveData() {
                 .addComponent(jLabel1))
         );
 
+        viewAllBtn.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
+        viewAllBtn.setText("VIEW ALL");
+        viewAllBtn.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        viewAllBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                viewAllBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -364,7 +382,9 @@ private void clearTablePreserveData() {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(maleBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(fmaleBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(fmaleBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(viewAllBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(24, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
@@ -382,7 +402,8 @@ private void clearTablePreserveData() {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(generateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(maleBtn)
-                    .addComponent(fmaleBtn))
+                    .addComponent(fmaleBtn)
+                    .addComponent(viewAllBtn))
                 .addGap(17, 17, 17))
         );
 
@@ -410,6 +431,222 @@ private void clearTablePreserveData() {
     private void txtSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchKeyReleased
         loadDataInTable();
     }//GEN-LAST:event_txtSearchKeyReleased
+
+    private void generateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generateBtnActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_generateBtnActionPerformed
+
+    private void viewAllBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewAllBtnActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_viewAllBtnActionPerformed
+public void setupViewAllButton(JButton viewAllBtn, JTable studentTable) {
+    viewAllBtn.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            DefaultTableModel model = (DefaultTableModel) studentTable.getModel();
+            model.setRowCount(0); // Clear existing rows
+
+            LocalDate today = LocalDate.now();
+            long presentCount = 0;
+
+            try (Connection con = ConnectionProvider.getCon();
+                 PreparedStatement ps = con.prepareStatement(
+                     "SELECT s.id, s.name, s.gender, a.date, a.timeIn, s.section " +
+                     "FROM student s " +
+                     "JOIN studentAttendancee a ON s.id = a.studentId " +
+                     "WHERE DATE(a.date) = ? AND s.section = '11-Andriod'"
+                 )) {
+
+                ps.setDate(1, java.sql.Date.valueOf(today));
+                ResultSet rs = ps.executeQuery();
+
+                while (rs.next()) {
+                    String lrn = rs.getString("id");
+                    String name = rs.getString("name");
+                    String gender = rs.getString("gender");
+                    String rawDate = rs.getString("date");
+                    String rawTime = rs.getString("timeIn");
+                    String section = rs.getString("section");
+
+                    // ✅ Convert UTC date/time to PH time
+                    LocalDate date = LocalDate.parse(rawDate);
+                    LocalTime time = LocalTime.parse(rawTime);
+
+                    ZoneId dbZone = ZoneId.of("UTC");
+                    ZoneId localZone = ZoneId.of("Asia/Manila");
+
+                    LocalDateTime utcDateTime = LocalDateTime.of(date, time);
+                    ZonedDateTime localDateTime = utcDateTime.atZone(dbZone).withZoneSameInstant(localZone);
+
+                    String formattedDate = localDateTime.format(DateTimeFormatter.ofPattern("MMM dd, yyyy"));
+                    String formattedTime = localDateTime.format(DateTimeFormatter.ofPattern("hh:mma")).toLowerCase();
+
+                    // ✅ Add row to table
+                    model.addRow(new Object[]{lrn, name, gender, formattedDate, formattedTime, section});
+                    presentCount++;
+                }
+
+                // ✅ Calculate absent count
+                long totalStudents = 0;
+                String countSql = "SELECT COUNT(*) AS total FROM student WHERE section = '11-Andriod'";
+                try (PreparedStatement psCount = con.prepareStatement(countSql)) {
+                    ResultSet rsCount = psCount.executeQuery();
+                    if (rsCount.next()) {
+                        totalStudents = rsCount.getLong("total");
+                    }
+                }
+
+                long absentCount = totalStudents - presentCount;
+
+                // ✅ Update labels
+                lblPresent.setText(String.valueOf(presentCount));
+                lblAbsent.setText(String.valueOf(absentCount));
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Error loading attendance: " + ex.getMessage());
+                ex.printStackTrace();
+            }
+        }
+    });
+} 
+    public static void setupGenerateExcel(JButton generateBtn, JTable attendanceTable) {
+        generateBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Workbook workbook = new XSSFWorkbook();
+                Sheet sheet = workbook.createSheet("Attendance");
+
+                // Header row
+                Row headerRow = sheet.createRow(0);
+                for (int i = 0; i < attendanceTable.getColumnCount(); i++) {
+                    Cell cell = headerRow.createCell(i);
+                    cell.setCellValue(attendanceTable.getColumnName(i));
+                }
+
+                // Data rows
+                for (int i = 0; i < attendanceTable.getRowCount(); i++) {
+                    Row row = sheet.createRow(i + 1);
+                    for (int j = 0; j < attendanceTable.getColumnCount(); j++) {
+                        Object value = attendanceTable.getValueAt(i, j);
+                        String cellValue = (value != null && !value.toString().trim().isEmpty()) ? value.toString() : "N/A";
+                        row.createCell(j).setCellValue(cellValue);
+                    }
+                }
+
+                // Step 1: Get all student names + gender (normalized)
+                Map<String, String> studentGenderMap = new HashMap<>();
+                Set<String> allStudents = new HashSet<>();
+                try (Connection con = ConnectionProvider.getCon();
+                     Statement st = con.createStatement()) {
+
+                    String section = attendanceTable.getRowCount() > 0
+                            ? attendanceTable.getValueAt(0, 5).toString().trim()
+                            : "";
+
+                    if (!section.isEmpty()) {
+                        ResultSet rs = st.executeQuery("SELECT name, gender FROM student WHERE section = '" + section + "'");
+                        while (rs.next()) {
+                            String name = rs.getString("name").trim().toLowerCase();
+                            String gender = rs.getString("gender");
+                            allStudents.add(name);
+                            studentGenderMap.put(name, gender);
+                        }
+                        System.out.println("DEBUG: Loaded " + allStudents.size() + " students from database");
+                    }
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, "Error loading student list: " + ex.getMessage());
+                }
+
+                // Step 2: Group present students by date (normalized) - FIXED COLUMN INDEX
+                Map<String, Set<String>> presentByDate = new HashMap<>();
+                for (int i = 0; i < attendanceTable.getRowCount(); i++) {
+                    // FIXED: Changed from index 4 to index 3 (DATE column)
+                    String date = attendanceTable.getValueAt(i, 3) != null ? attendanceTable.getValueAt(i, 3).toString() : "";
+                    String name = attendanceTable.getValueAt(i, 1) != null ? attendanceTable.getValueAt(i, 1).toString().trim().toLowerCase() : "";
+                    
+                    if (!name.isEmpty() && !date.isEmpty()) {
+                        presentByDate.computeIfAbsent(date, k -> new HashSet<>()).add(name);
+                        System.out.println("DEBUG: Added " + name + " as present on " + date);
+                    }
+                }
+
+                // Step 3: Write summary with male/female separation
+                int summaryStartRow = attendanceTable.getRowCount() + 2;
+                Row header = sheet.createRow(summaryStartRow++);
+                header.createCell(0).setCellValue("Date");
+                header.createCell(1).setCellValue("Present Male");
+                header.createCell(2).setCellValue("Present Female");
+                header.createCell(3).setCellValue("Absent Male Count");
+                header.createCell(4).setCellValue("Absent Female Count");
+                header.createCell(5).setCellValue("Absent Male Names");
+                header.createCell(6).setCellValue("Absent Female Names");
+
+                CellStyle wrapStyle = workbook.createCellStyle();
+                wrapStyle.setWrapText(true);
+
+                for (Map.Entry<String, Set<String>> entry : presentByDate.entrySet()) {
+                    String date = entry.getKey();
+                    Set<String> presentStudents = entry.getValue();
+
+                    Set<String> absentStudents = new HashSet<>(allStudents);
+                    absentStudents.removeAll(presentStudents);
+
+                    System.out.println("DEBUG: Date " + date + " - Present: " + presentStudents.size() + ", Absent: " + absentStudents.size());
+
+                    int presentMale = 0, presentFemale = 0;
+                    int absentMale = 0, absentFemale = 0;
+                    List<String> absentMaleNames = new ArrayList<>();
+                    List<String> absentFemaleNames = new ArrayList<>();
+
+                    for (String s : presentStudents) {
+                        if ("Male".equalsIgnoreCase(studentGenderMap.get(s))) presentMale++;
+                        else if ("Female".equalsIgnoreCase(studentGenderMap.get(s))) presentFemale++;
+                    }
+
+                    for (String s : absentStudents) {
+                        String gender = studentGenderMap.get(s);
+                        if ("Male".equalsIgnoreCase(gender)) {
+                            absentMale++;
+                            absentMaleNames.add(s);
+                        } else if ("Female".equalsIgnoreCase(gender)) {
+                            absentFemale++;
+                            absentFemaleNames.add(s);
+                        }
+                    }
+
+                    Row row = sheet.createRow(summaryStartRow++);
+                    row.createCell(0).setCellValue(date);
+                    row.createCell(1).setCellValue(presentMale);
+                    row.createCell(2).setCellValue(presentFemale);
+                    row.createCell(3).setCellValue(absentMale);
+                    row.createCell(4).setCellValue(absentFemale);
+
+                    Cell absentMaleCell = row.createCell(5);
+                    absentMaleCell.setCellValue(String.join("\n", absentMaleNames));
+                    absentMaleCell.setCellStyle(wrapStyle);
+
+                    Cell absentFemaleCell = row.createCell(6);
+                    absentFemaleCell.setCellValue(String.join("\n", absentFemaleNames));
+                    absentFemaleCell.setCellStyle(wrapStyle);
+                }
+
+                // Save to file
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setDialogTitle("Save Excel File");
+                int userSelection = fileChooser.showSaveDialog(null);
+                if (userSelection == JFileChooser.APPROVE_OPTION) {
+                    File fileToSave = fileChooser.getSelectedFile();
+                    try (FileOutputStream fileOut = new FileOutputStream(fileToSave + ".xlsx")) {
+                        workbook.write(fileOut);
+                        workbook.close();
+                        JOptionPane.showMessageDialog(null, "Excel file saved to: " + fileToSave.getAbsolutePath());
+                    } catch (IOException ex) {
+                        JOptionPane.showMessageDialog(null, "Error saving Excel file: " + ex.getMessage());
+                    }
+                }
+            }
+        });
+    }
 
     /**
      * @param args the command line arguments
@@ -451,116 +688,114 @@ private void clearTablePreserveData() {
     private javax.swing.JLabel presentLBL;
     private javax.swing.JTable studentTable;
     private javax.swing.JTextField txtSearch;
+    private javax.swing.JButton viewAllBtn;
     // End of variables declaration//GEN-END:variables
 
 private void loadDataInTable() {
-    List<String> columns = Arrays.asList("LRN", "NAME", "GENDER", "DATE", "TIME-IN", "GRADE & SEC");
+        List<String> columns = Arrays.asList("LRN", "NAME", "GENDER", "DATE", "TIME-IN", "GRADE & SEC");
 
-    String searchText = txtSearch.getText().replaceAll("\\p{C}", "").trim().toLowerCase();
-    LocalDate today = LocalDate.now();
+        String searchText = txtSearch.getText().replaceAll("\\p{C}", "").trim().toLowerCase();
+        LocalDate today = LocalDate.now();
 
-    DefaultTableModel model = new DefaultTableModel();
-    model.setColumnIdentifiers(columns.toArray());
-    studentTable.setModel(model);
+        DefaultTableModel model = new DefaultTableModel();
+        model.setColumnIdentifiers(columns.toArray());
+        studentTable.setModel(model);
 
-    // Query attendance records for "12-Java" only
-    StringBuilder sql = new StringBuilder(
-        "SELECT combined.studentId, combined.name, " +
-        "COALESCE(s.gender, combined.gender, 'N/A') as gender, " +
-        "combined.date, combined.timeIn, combined.section " +
-        "FROM (" +
-        "SELECT studentId, name, gender, date, timeIn, section FROM studentAttendancee " +
-        "UNION ALL " +
-        "SELECT studentId, name, gender, date, timeIn, section FROM studentAttendanceArchive" +
-        ") AS combined " +
-        "LEFT JOIN student s ON combined.studentId = s.id " +
-        "WHERE DATE(combined.date) = ? AND combined.section = '11-Andriod'"
-    );
-
-    if (!searchText.isEmpty()) {
-        sql.append(" AND (LOWER(combined.name) LIKE ? OR combined.studentId LIKE ?)");
-    }
-
-    long presentCount = 0;
-    Set<String> presentStudentIds = new HashSet<>(); // ✅ Track who's present
-
-    try (Connection con = ConnectionProvider.getCon();
-         PreparedStatement ps = con.prepareStatement(sql.toString())) {
-
-        ps.setDate(1, java.sql.Date.valueOf(today));
+        StringBuilder sql = new StringBuilder(
+            "SELECT combined.studentId, combined.name, " +
+            "COALESCE(s.gender, combined.gender, 'N/A') as gender, " +
+            "combined.date, combined.timeIn, combined.section " +
+            "FROM (" +
+            "SELECT studentId, name, gender, date, timeIn, section FROM studentAttendancee " +
+            "UNION ALL " +
+            "SELECT studentId, name, gender, date, timeIn, section FROM studentAttendanceArchive" +
+            ") AS combined " +
+            "LEFT JOIN student s ON combined.studentId = s.id " +
+            "WHERE DATE(combined.date) = ? AND combined.section = '11-Andriod'"
+        );
 
         if (!searchText.isEmpty()) {
-            ps.setString(2, "%" + searchText + "%");
-            ps.setString(3, "%" + searchText + "%");
+            sql.append(" AND (LOWER(combined.name) LIKE ? OR combined.studentId LIKE ?)");
         }
 
-        ResultSet rs = ps.executeQuery();
+        long presentCount = 0;
+        Set<String> presentStudentIds = new HashSet<>();
 
-        while (rs.next()) {
-            List<Object> row = new ArrayList<>();
-            String studentId = rs.getString("studentId");
-            row.add(studentId);
-            row.add(rs.getString("name"));
-            row.add(rs.getString("gender"));
+        try (Connection con = ConnectionProvider.getCon();
+             PreparedStatement ps = con.prepareStatement(sql.toString())) {
 
-            LocalDate rawDate = LocalDate.parse(rs.getString("date"));
-            LocalTime rawTime = LocalTime.parse(rs.getString("timeIn"));
+            ps.setDate(1, java.sql.Date.valueOf(today));
 
-            ZoneId dbZone = ZoneId.of("UTC");
-            ZoneId localZone = ZoneId.of("Asia/Manila");
-
-            LocalDateTime utcDateTime = LocalDateTime.of(rawDate, rawTime);
-            ZonedDateTime localDateTime = utcDateTime.atZone(dbZone).withZoneSameInstant(localZone);
-
-            String formattedDate = localDateTime.format(DateTimeFormatter.ofPattern("MMM dd, yyyy"));
-            String formattedTime = localDateTime.format(DateTimeFormatter.ofPattern("hh:mma")).toLowerCase();
-
-            row.add(formattedDate);
-            row.add(formattedTime);
-            row.add(rs.getString("section"));
-
-            model.addRow(row.toArray());
-
-            presentCount++;
-            presentStudentIds.add(studentId); // ✅ Track this student as present
-        }
-
-        // ✅ Calculate absent count dynamically: Total students - Present students
-        long totalStudents = 0;
-        String countSql = "SELECT COUNT(*) AS total FROM student WHERE section = '11-Andriod'";
-        try (PreparedStatement psCount = con.prepareStatement(countSql)) {
-            ResultSet rsCount = psCount.executeQuery();
-            if (rsCount.next()) {
-                totalStudents = rsCount.getLong("total");
+            if (!searchText.isEmpty()) {
+                ps.setString(2, "%" + searchText + "%");
+                ps.setString(3, "%" + searchText + "%");
             }
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                List<Object> row = new ArrayList<>();
+                String studentId = rs.getString("studentId");
+                row.add(studentId);
+                row.add(rs.getString("name"));
+                row.add(rs.getString("gender"));
+
+                LocalDate rawDate = LocalDate.parse(rs.getString("date"));
+                LocalTime rawTime = LocalTime.parse(rs.getString("timeIn"));
+
+                ZoneId dbZone = ZoneId.of("UTC");
+                ZoneId localZone = ZoneId.of("Asia/Manila");
+
+                LocalDateTime utcDateTime = LocalDateTime.of(rawDate, rawTime);
+                ZonedDateTime localDateTime = utcDateTime.atZone(dbZone).withZoneSameInstant(localZone);
+
+                String formattedDate = localDateTime.format(DateTimeFormatter.ofPattern("MMM dd, yyyy"));
+                String formattedTime = localDateTime.format(DateTimeFormatter.ofPattern("hh:mma")).toLowerCase();
+
+                row.add(formattedDate);
+                row.add(formattedTime);
+                row.add(rs.getString("section"));
+
+                model.addRow(row.toArray());
+
+                presentCount++;
+                presentStudentIds.add(studentId);
+            }
+
+            long totalStudents = 0;
+            String countSql = "SELECT COUNT(*) AS total FROM student WHERE section = '11-Andriod'";
+            try (PreparedStatement psCount = con.prepareStatement(countSql)) {
+                ResultSet rsCount = psCount.executeQuery();
+                if (rsCount.next()) {
+                    totalStudents = rsCount.getLong("total");
+                }
+            }
+
+            long absentCount = totalStudents - presentCount;
+
+            lblPresent.setVisible(true);
+            lblAbsent.setVisible(true);
+            presentLBL.setVisible(true);
+            absentLBL.setVisible(true);
+
+            lblPresent.setText(String.valueOf(presentCount));
+            lblAbsent.setText(String.valueOf(absentCount));
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Something went wrong: " + ex.getMessage());
+            ex.printStackTrace();
         }
+    }
 
-        long absentCount = totalStudents - presentCount; // ✅ Real-time calculation
-
-        lblPresent.setVisible(true);
-        lblAbsent.setVisible(true);
-        presentLBL.setVisible(true);
-        absentLBL.setVisible(true);
-
-        lblPresent.setText(String.valueOf(presentCount));
-        lblAbsent.setText(String.valueOf(absentCount));
-
-    } catch (Exception ex) {
-        JOptionPane.showMessageDialog(null, "Something went wrong: " + ex.getMessage());
-        ex.printStackTrace();
+    private Long countWeekdays(LocalDate fromDate, LocalDate toDate) {
+        long count = 0;
+        LocalDate date = fromDate;
+        while (date.isBefore(toDate) || date.equals(toDate)) {
+            if (!(date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY)) {
+                count++;
+            }
+            date = date.plusDays(1);
+        }
+        return count;
     }
 }
-
- private Long countWeekdays(LocalDate fromDate, LocalDate toDate) {
-    long count = 0;
-    LocalDate date = fromDate;
-    while (date.isBefore(toDate) || date.equals(toDate)) {
-        if (!(date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY)) {
-            count++;
-        }
-        date = date.plusDays(1);
-    }
-    return count;
-  }
-}
-

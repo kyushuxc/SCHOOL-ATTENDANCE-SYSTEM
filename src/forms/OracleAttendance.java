@@ -63,7 +63,7 @@ public class OracleAttendance extends javax.swing.JFrame {
     this.getRootPane().setBorder(BorderFactory.createMatteBorder(6, 6, 6, 6, Color.GRAY));
     
     setupGenerateExcel(generateBtn, studentTable);
-
+    setupViewAllOracle(viewAllBtn4, studentTable);
     startMidnightClearThread(); // ✅ Add this line 
       
      maleBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -193,6 +193,7 @@ private void clearTablePreserveData() {
     JOptionPane.showMessageDialog(null, "Attendance table cleared for the new day.");
 }
  
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -216,6 +217,10 @@ private void clearTablePreserveData() {
         absentLBL = new javax.swing.JLabel();
         lblAbsent = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
+        viewAllBtn1 = new javax.swing.JButton();
+        viewAllBtn2 = new javax.swing.JButton();
+        viewAllBtn3 = new javax.swing.JButton();
+        viewAllBtn4 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -350,25 +355,66 @@ private void clearTablePreserveData() {
                 .addComponent(jLabel1))
         );
 
+        viewAllBtn1.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
+        viewAllBtn1.setText("VIEW ALL");
+        viewAllBtn1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        viewAllBtn2.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
+        viewAllBtn2.setText("VIEW ALL");
+        viewAllBtn2.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        viewAllBtn3.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
+        viewAllBtn3.setText("VIEW ALL");
+        viewAllBtn3.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        viewAllBtn4.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
+        viewAllBtn4.setText("VIEW ALL");
+        viewAllBtn4.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        viewAllBtn4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                viewAllBtn4ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(22, 22, 22)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel16, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 970, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jPanel16, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 970, Short.MAX_VALUE))
+                        .addContainerGap(24, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(generateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(maleBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(fmaleBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(fmaleBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(24, Short.MAX_VALUE))
+                        .addComponent(viewAllBtn4)
+                        .addGap(27, 27, 27))))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(exitbtn))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(viewAllBtn1)
+                    .addGap(0, 0, Short.MAX_VALUE)))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(viewAllBtn2)
+                    .addGap(0, 0, Short.MAX_VALUE)))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(viewAllBtn3)
+                    .addGap(0, 0, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -382,8 +428,24 @@ private void clearTablePreserveData() {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(generateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(maleBtn)
-                    .addComponent(fmaleBtn))
+                    .addComponent(fmaleBtn)
+                    .addComponent(viewAllBtn4))
                 .addGap(17, 17, 17))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(viewAllBtn1)
+                    .addGap(0, 0, Short.MAX_VALUE)))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(viewAllBtn2)
+                    .addGap(0, 0, Short.MAX_VALUE)))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(viewAllBtn3)
+                    .addGap(0, 0, Short.MAX_VALUE)))
         );
 
         pack();
@@ -410,7 +472,71 @@ private void clearTablePreserveData() {
     private void txtSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchKeyReleased
         loadDataInTable();
     }//GEN-LAST:event_txtSearchKeyReleased
-  public static void setupGenerateExcel(JButton generateBtn, JTable attendanceTable) {
+
+    private void viewAllBtn4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewAllBtn4ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_viewAllBtn4ActionPerformed
+  public void setupViewAllOracle(JButton viewAllBtn, JTable studentTable) {
+    viewAllBtn4.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            DefaultTableModel model = (DefaultTableModel) studentTable.getModel();
+            model.setRowCount(0);
+
+            LocalDate today = LocalDate.now();
+            long presentCount = 0;
+
+            try (Connection con = ConnectionProvider.getCon();
+                 PreparedStatement ps = con.prepareStatement(
+                     "SELECT s.id, s.name, s.gender, a.date, a.timeIn, s.section " +
+                     "FROM student s " +
+                     "JOIN studentAttendance a ON s.id = a.studentId " +
+                     "WHERE DATE(a.date) = ? AND s.section = '12-Oracle'"
+                 )) {
+
+                ps.setDate(1, java.sql.Date.valueOf(today));
+                ResultSet rs = ps.executeQuery();
+
+                while (rs.next()) {
+                    String lrn = rs.getString("id");
+                    String name = rs.getString("name");
+                    String gender = rs.getString("gender");
+                    String rawDate = rs.getString("date");
+                    String rawTime = rs.getString("timeIn");
+                    String section = rs.getString("section");
+
+                    LocalDate date = LocalDate.parse(rawDate);
+                    LocalTime time = LocalTime.parse(rawTime);
+                    ZonedDateTime localDateTime = LocalDateTime.of(date, time)
+                        .atZone(ZoneId.of("UTC"))
+                        .withZoneSameInstant(ZoneId.of("Asia/Manila"));
+
+                    String formattedDate = localDateTime.format(DateTimeFormatter.ofPattern("MMM dd, yyyy"));
+                    String formattedTime = localDateTime.format(DateTimeFormatter.ofPattern("hh:mma")).toLowerCase();
+
+                    model.addRow(new Object[]{lrn, name, gender, formattedDate, formattedTime, section});
+                    presentCount++;
+                }
+
+                long totalStudents = 0;
+                try (PreparedStatement psCount = con.prepareStatement(
+                        "SELECT COUNT(*) AS total FROM student WHERE section = '12-Oracle'")) {
+                    ResultSet rsCount = psCount.executeQuery();
+                    if (rsCount.next()) totalStudents = rsCount.getLong("total");
+                }
+
+                lblPresent.setText(String.valueOf(presentCount));
+                lblAbsent.setText(String.valueOf(totalStudents - presentCount));
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Error loading Oracle attendance: " + ex.getMessage());
+            }
+        }
+    });
+}
+
+    
+   public static void setupGenerateExcelOracle(JButton generateBtn, JTable attendanceTable) {
     generateBtn.addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -424,7 +550,7 @@ private void clearTablePreserveData() {
                 cell.setCellValue(attendanceTable.getColumnName(i));
             }
 
-            // ✅ Data rows with null-safe handling
+            // Data rows
             for (int i = 0; i < attendanceTable.getRowCount(); i++) {
                 Row row = sheet.createRow(i + 1);
                 for (int j = 0; j < attendanceTable.getColumnCount(); j++) {
@@ -434,24 +560,17 @@ private void clearTablePreserveData() {
                 }
             }
 
-            // Step 1: Get all student names + gender
+            // Step 1: Get all student names + gender for 12-Oracle
             Map<String, String> studentGenderMap = new HashMap<>();
             Set<String> allStudents = new HashSet<>();
             try (Connection con = ConnectionProvider.getCon();
                  Statement st = con.createStatement()) {
-
-                String section = attendanceTable.getRowCount() > 0
-                        ? attendanceTable.getValueAt(0, 5).toString()
-                        : "";
-
-                if (!section.isEmpty()) {
-                    ResultSet rs = st.executeQuery("SELECT name, gender FROM student WHERE section = '" + section + "'");
-                    while (rs.next()) {
-                        String name = rs.getString("name");
-                        String gender = rs.getString("gender"); // assumes column exists
-                        allStudents.add(name);
-                        studentGenderMap.put(name, gender);
-                    }
+                ResultSet rs = st.executeQuery("SELECT name, gender FROM student WHERE section = '12-Oracle'");
+                while (rs.next()) {
+                    String name = rs.getString("name").trim().toLowerCase();
+                    String gender = rs.getString("gender");
+                    allStudents.add(name);
+                    studentGenderMap.put(name, gender);
                 }
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(null, "Error loading student list: " + ex.getMessage());
@@ -460,12 +579,14 @@ private void clearTablePreserveData() {
             // Step 2: Group present students by date
             Map<String, Set<String>> presentByDate = new HashMap<>();
             for (int i = 0; i < attendanceTable.getRowCount(); i++) {
-                String date = attendanceTable.getValueAt(i, 4) != null ? attendanceTable.getValueAt(i, 4).toString() : "";
-                String name = attendanceTable.getValueAt(i, 1) != null ? attendanceTable.getValueAt(i, 1).toString() : "";
-                presentByDate.computeIfAbsent(date, k -> new HashSet<>()).add(name);
+                String date = attendanceTable.getValueAt(i, 3) != null ? attendanceTable.getValueAt(i, 3).toString() : "";
+                String name = attendanceTable.getValueAt(i, 1) != null ? attendanceTable.getValueAt(i, 1).toString().trim().toLowerCase() : "";
+                if (!name.isEmpty() && !date.isEmpty()) {
+                    presentByDate.computeIfAbsent(date, k -> new HashSet<>()).add(name);
+                }
             }
 
-            // Step 3: Write summary with male/female separation
+            // Step 3: Write summary
             int summaryStartRow = attendanceTable.getRowCount() + 2;
             Row header = sheet.createRow(summaryStartRow++);
             header.createCell(0).setCellValue("Date");
@@ -482,7 +603,6 @@ private void clearTablePreserveData() {
             for (Map.Entry<String, Set<String>> entry : presentByDate.entrySet()) {
                 String date = entry.getKey();
                 Set<String> presentStudents = entry.getValue();
-
                 Set<String> absentStudents = new HashSet<>(allStudents);
                 absentStudents.removeAll(presentStudents);
 
@@ -495,12 +615,12 @@ private void clearTablePreserveData() {
                     if ("Male".equalsIgnoreCase(studentGenderMap.get(s))) presentMale++;
                     else if ("Female".equalsIgnoreCase(studentGenderMap.get(s))) presentFemale++;
                 }
-
                 for (String s : absentStudents) {
-                    if ("Male".equalsIgnoreCase(studentGenderMap.get(s))) {
+                    String gender = studentGenderMap.get(s);
+                    if ("Male".equalsIgnoreCase(gender)) {
                         absentMale++;
                         absentMaleNames.add(s);
-                    } else if ("Female".equalsIgnoreCase(studentGenderMap.get(s))) {
+                    } else if ("Female".equalsIgnoreCase(gender)) {
                         absentFemale++;
                         absentFemaleNames.add(s);
                     }
@@ -540,6 +660,7 @@ private void clearTablePreserveData() {
     });
 }
 
+
     /**
      * @param args the command line arguments
      */
@@ -567,35 +688,23 @@ private void clearTablePreserveData() {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel absentLBL;
-    private javax.swing.JLabel absentLBL1;
-    private javax.swing.JLabel absentLBL2;
     private javax.swing.JButton exitbtn;
     private javax.swing.JButton fmaleBtn;
     private javax.swing.JButton generateBtn;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JPanel jPanel14;
-    private javax.swing.JPanel jPanel15;
     javax.swing.JPanel jPanel16;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblAbsent;
-    private javax.swing.JLabel lblAbsent1;
-    private javax.swing.JLabel lblAbsent2;
     private javax.swing.JLabel lblPresent;
-    private javax.swing.JLabel lblPresent1;
-    private javax.swing.JLabel lblPresent2;
     private javax.swing.JButton maleBtn;
     private javax.swing.JLabel presentLBL;
-    private javax.swing.JLabel presentLBL1;
-    private javax.swing.JLabel presentLBL2;
     private javax.swing.JTable studentTable;
     private javax.swing.JTextField txtSearch;
-    private javax.swing.JTextField txtSearch1;
-    private javax.swing.JTextField txtSearch2;
+    private javax.swing.JButton viewAllBtn1;
+    private javax.swing.JButton viewAllBtn2;
+    private javax.swing.JButton viewAllBtn3;
+    private javax.swing.JButton viewAllBtn4;
     // End of variables declaration//GEN-END:variables
  
   private void loadDataInTable() {
